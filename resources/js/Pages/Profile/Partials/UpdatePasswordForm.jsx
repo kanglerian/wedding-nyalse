@@ -36,6 +36,7 @@ export default function UpdatePasswordForm({ className = '' }) {
         });
     };
 
+
     return (
         <section className={className}>
             <header>

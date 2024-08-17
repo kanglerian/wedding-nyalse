@@ -24,10 +24,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        $categories = Category::paginate(5);
-        return Inertia::render('Setting/Category/AddCategory', [
-            'categories' => $categories,
-        ]);
+        //
     }
 
     /**
@@ -35,7 +32,15 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|min:3|max:100|unique:categories,name',
+        ]);
+
+        Category::create([
+            'name' => $request->input('name'),
+        ]);
+
+        return redirect()->route('category.index')->with('message', 'Category created successfully.');
     }
 
     /**
@@ -59,7 +64,14 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $request->validate([
+            'name' => 'required|min:5|unique:categories,name,' . $category->id,
+        ]);
+
+        $category->update([
+            'name' => $request->input('name'),
+        ]);
+        return redirect()->route('category.index')->with('message','Category updated successfully.');
     }
 
     /**
