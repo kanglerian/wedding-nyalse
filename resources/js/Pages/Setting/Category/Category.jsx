@@ -39,11 +39,11 @@ export default function Category({ auth }) {
                 setShowAlert(true);
                 setModalCreate(false);
                 setModalEdit(false);
+                reset();
             },
             onError: (errors) => {
                 console.log(errors);
-            },
-            onFinish: () => reset(),
+            }
         });
     };
 
