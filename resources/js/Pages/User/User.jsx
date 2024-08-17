@@ -3,14 +3,16 @@ import { useState, useEffect } from "react";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import { useRef } from "react";
 
-export default function Category({ auth }) {
-    const { categories, flash } = usePage().props;
+export default function User({ auth }) {
+    const { users, flash } = usePage().props;
     const [modalCreate, setModalCreate] = useState(false);
     const [modalEdit, setModalEdit] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
     const [showAlert, setShowAlert] = useState(flash.message ? true : false);
 
     const currentNameInput = useRef();
+    const currentEmailInput = useRef();
+    const currentPasswordInput = useRef();
 
     const {
         post,
@@ -25,14 +27,15 @@ export default function Category({ auth }) {
     } = useForm({
         id: "",
         name: "",
+        email: ""
     });
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const submitAction = modalCreate ? post : patch;
         const routeAction = modalCreate
-            ? route("category.store")
-            : route("category.update", data.id);
+            ? route("user.store")
+            : route("user.update", data.id);
         submitAction(routeAction, {
             preserveScroll: true,
             onSuccess: () => {
@@ -47,10 +50,11 @@ export default function Category({ auth }) {
         });
     };
 
-    const handleEditClick = (category) => {
+    const handleEditClick = (user) => {
         setData({
-            id: category.id,
-            name: category.name,
+            id: user.id,
+            name: user.name,
+            email: user.email
         });
         setModalEdit(true);
     };
@@ -66,18 +70,32 @@ export default function Category({ auth }) {
         setShowAlert(false);
     };
 
-    const handleDeleteClick = (category) => {
+    const handleDeleteClick = (user) => {
         setData({
-            id: category.id
+            id: user.id,
+            name: user.name,
+            email: user.email
         });
         setModalDelete(true);
     };
 
     const handleDelete = (id) => {
-        destroy(route("category.destroy", id), {
+        destroy(route("user.destroy", id), {
             onSuccess: () => {
                 setShowAlert(true);
                 setModalDelete(false);
+            },
+            onError: (errors) => {
+                console.log(errors);
+            },
+            onFinish: () => reset(),
+        });
+    }
+
+    const handleStatus = (id) => {
+        patch(route("user.status", id), {
+            onSuccess: () => {
+                setShowAlert(true);
             },
             onError: (errors) => {
                 console.log(errors);
@@ -94,34 +112,9 @@ export default function Category({ auth }) {
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={
-                <nav
-                    className="flex justify-center md:justify-start"
-                    aria-label="Breadcrumb"
-                >
-                    <ol className="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                        <li className="inline-flex items-center">
-                            <Link
-                                href={route("setting")}
-                                className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
-                            >
-                                <i className="fa-solid fa-gears me-1.5"></i>
-                                Setting
-                            </Link>
-                        </li>
-                        <li aria-current="page">
-                            <div className="flex items-center">
-                                <i className="fa-solid fa-angle-right text-gray-400"></i>
-                                <span className="ms-1 text-sm font-medium text-gray-500 md:ms-2">
-                                    Master Categories
-                                </span>
-                            </div>
-                        </li>
-                    </ol>
-                </nav>
-            }
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight text-center md:text-left">Users</h2>}
         >
-            <Head title="Category" />
+            <Head title="Users" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-3">
@@ -154,7 +147,7 @@ export default function Category({ auth }) {
                             className="inline-block text-white bg-sky-500 hover:bg-sky-600 transition-all ease-in-out font-medium rounded-xl text-sm px-5 py-2.5 space-x-2"
                         >
                             <i className="fa-solid fa-plus"></i>
-                            <span>New Category</span>
+                            <span>New user</span>
                         </button>
                     </header>
                     <div className="bg-white shadow-sm sm:rounded-3xl p-8">
@@ -169,42 +162,68 @@ export default function Category({ auth }) {
                                             No.
                                         </th>
                                         <th scope="col" className="px-6 py-4">
-                                            Category
+                                            Name
                                         </th>
-                                        <th
-                                            scope="col"
-                                            className="px-6 py-4 rounded-tr-xl"
-                                        >
+                                        <th scope="col" className="px-6 py-4">
+                                            Email
+                                        </th>
+                                        <th scope="col" className="px-6 py-4">
+                                            Role
+                                        </th>
+                                        <th scope="col" className="px-6 py-4 rounded-tr-xl">
                                             Action
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {categories.data.length > 0 ? (
-                                        categories.data.map(
-                                            (category, index) => (
+                                    {users.data.length > 0 ? (
+                                        users.data.map(
+                                            (user, index) => (
                                                 <tr
-                                                    key={category.id}
+                                                    key={user.id}
                                                     className="bg-white border-b"
                                                 >
                                                     <th
                                                         scope="row"
                                                         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap"
                                                     >
-                                                        {(categories.current_page -
+                                                        {(users.current_page -
                                                             1) *
-                                                            categories.per_page +
+                                                            users.per_page +
                                                             index +
                                                             1}
                                                     </th>
                                                     <td className="px-6 py-4">
-                                                        {category.name}
+                                                        {user.name}
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        {user.email}
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        {user.role}
                                                     </td>
                                                     <td className="px-6 py-4 flex justify-start gap-1">
                                                         <button
                                                             onClick={() =>
+                                                                handleStatus(
+                                                                    user.id
+                                                                )
+                                                            }
+                                                            type="button"
+                                                            className={`text-white bg-${user.status ? 'emerald' : 'red'}-500 hover:bg-${user.status ? 'emerald' : 'red'}-600 transition-all ease-in-out font-medium rounded-xl text-sm px-3 py-1.5 text-center`}
+                                                        >
+                                                            {
+                                                                user.status ? (
+                                                                    <i className="fa-solid fa-toggle-on"></i>
+                                                                ) : (
+                                                                    <i className="fa-solid fa-toggle-off"></i>
+                                                                )
+                                                            }
+                                                        </button>
+                                                        <button
+                                                            onClick={() =>
                                                                 handleEditClick(
-                                                                    category
+                                                                    user
                                                                 )
                                                             }
                                                             type="button"
@@ -218,7 +237,7 @@ export default function Category({ auth }) {
                                                             }
                                                             onClick={() =>
                                                                 handleDeleteClick(
-                                                                    category
+                                                                    user
                                                                 )
                                                             }
                                                             type="button"
@@ -245,7 +264,7 @@ export default function Category({ auth }) {
                         </div>
 
                         <div className="pt-8 pb-2">
-                            {categories.links.map((link, index) => (
+                            {users.links.map((link, index) => (
                                 <Link
                                     key={index}
                                     href={link.url || "#"}
@@ -281,8 +300,8 @@ export default function Category({ auth }) {
                             <div className="flex items-center justify-between px-6 py-4 md:p-5 border-b rounded-t">
                                 <h3 className="text-lg font-semibold text-gray-900">
                                     {modalCreate
-                                        ? "Create New Category"
-                                        : "Edit Category"}
+                                        ? "Create New user"
+                                        : "Edit user"}
                                 </h3>
                                 <button
                                     type="button"
@@ -312,7 +331,7 @@ export default function Category({ auth }) {
                                             name="name"
                                             id="name"
                                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 px-3"
-                                            placeholder="Category's name"
+                                            placeholder="User's name"
                                             required={true}
                                         />
                                         {errors.name && (
@@ -321,6 +340,61 @@ export default function Category({ auth }) {
                                             </p>
                                         )}
                                     </div>
+                                    <div className="col-span-2">
+                                        <label
+                                            htmlFor="email"
+                                            className="block mb-2 text-sm font-medium text-gray-900"
+                                        >
+                                            Email
+                                        </label>
+                                        <input
+                                            type="email"
+                                            ref={currentEmailInput}
+                                            value={data.email}
+                                            onChange={(e) =>
+                                                setData("email", e.target.value)
+                                            }
+                                            name="email"
+                                            id="email"
+                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 px-3"
+                                            placeholder="Email"
+                                            required={true}
+                                        />
+                                        {errors.email && (
+                                            <p className="text-xs text-red-600 mt-2">
+                                                {errors.email}
+                                            </p>
+                                        )}
+                                    </div>
+                                    {
+                                        modalCreate &&
+                                        <div className="col-span-2">
+                                            <label
+                                                htmlFor="password"
+                                                className="block mb-2 text-sm font-medium text-gray-900"
+                                            >
+                                                Password
+                                            </label>
+                                            <input
+                                                type="password"
+                                                ref={currentPasswordInput}
+                                                value={data.password}
+                                                onChange={(e) =>
+                                                    setData("password", e.target.value)
+                                                }
+                                                name="password"
+                                                id="password"
+                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 px-3"
+                                                placeholder="Password"
+                                                required={true}
+                                            />
+                                            {errors.password && (
+                                                <p className="text-xs text-red-600 mt-2">
+                                                    {errors.password}
+                                                </p>
+                                            )}
+                                        </div>
+                                    }
                                 </div>
                                 <button
                                     disabled={processing}
@@ -330,8 +404,8 @@ export default function Category({ auth }) {
                                     <i className="fa-solid fa-save"></i>
                                     <span>
                                         {modalCreate
-                                            ? "Add new category"
-                                            : "Update category"}
+                                            ? "Add new user"
+                                            : "Update user"}
                                     </span>
                                 </button>
                             </form>
@@ -349,7 +423,7 @@ export default function Category({ auth }) {
                             </button>
                             <div className="px-5 py-7 text-center">
                                 <i className="fa-solid fa-circle-exclamation text-red-500 fa-3x"></i>
-                                <h3 className="my-5 text-lg font-normal text-gray-500">Are you sure you want to delete this category?</h3>
+                                <h3 className="my-5 text-lg font-normal text-gray-500">Are you sure you want to delete this user?</h3>
                                 <button onClick={() => handleDelete(data.id)} type="button" className="text-white bg-red-600 hover:bg-red-800 transition-all ease-in-out font-medium rounded-xl text-sm inline-flex items-center px-5 py-2.5 text-center">
                                     Yes, I'm sure
                                 </button>

@@ -20,15 +20,29 @@ class UserSeeder extends Seeder
             [
                 "name" => "Administrator",
                 "email" => "admin@nyalse.id",
-                "password" => Hash::make("@Wedding311766"),
+                "password" => Hash::make("12345678"),
                 "role" => "A",
                 "created_at" => Carbon::now()->setTimezone('Asia/Jakarta'),
                 "updated_at" => Carbon::now()->setTimezone('Asia/Jakarta')
             ],[
                 "name" => "Client",
-                "email" => "client@gmail.com",
+                "email" => "client@nyalse.id",
                 "password" => Hash::make("12345678"),
                 "role" => "C",
+                "created_at" => Carbon::now()->setTimezone('Asia/Jakarta'),
+                "updated_at" => Carbon::now()->setTimezone('Asia/Jakarta')
+            ],[
+                "name" => "Partner",
+                "email" => "partner@nyalse.id",
+                "password" => Hash::make("12345678"),
+                "role" => "P",
+                "created_at" => Carbon::now()->setTimezone('Asia/Jakarta'),
+                "updated_at" => Carbon::now()->setTimezone('Asia/Jakarta')
+            ],[
+                "name" => "Partner 2",
+                "email" => "partnertwo@nyalse.id",
+                "password" => Hash::make("12345678"),
+                "role" => "P",
                 "created_at" => Carbon::now()->setTimezone('Asia/Jakarta'),
                 "updated_at" => Carbon::now()->setTimezone('Asia/Jakarta')
             ],

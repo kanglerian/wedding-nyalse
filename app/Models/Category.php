@@ -18,4 +18,8 @@ class Category extends Model
         'name',
         'status',
     ];
+
+    public function template(){
+        return $this->hasMany(Template::class, 'category_id');
+    }
 }

@@ -24,10 +24,25 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
+                                <NavLink href={route('template.index')} active={[
+                                    'template.index',
+                                    'template.create',
+                                    'template.show',
+                                    'template.edit',
+                                ].some(active => route().current(active))}>
+                                    Templates
+                                </NavLink>
+                                <NavLink href={route('user.index')} active={[
+                                    'user.index',
+                                    'user.create',
+                                    'user.show',
+                                    'user.edit',
+                                ].some(active => route().current(active))}>
+                                    Users
+                                </NavLink>
                                 <NavLink href={route('setting')} active={[
                                     'setting',
                                     'category.index',
-                                    'category.create',
                                     'category.show',
                                     'category.edit',
                                 ].some(active => route().current(active))}>
@@ -104,10 +119,17 @@ export default function Authenticated({ user, header, children }) {
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
                             Dashboard
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('template.index')} active={[
+                            'template.index',
+                            'template.create',
+                            'template.show',
+                            'template.edit',
+                        ].some(active => route().current(active))}>
+                            Template
+                        </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('setting')} active={[
                             'setting',
                             'category.index',
-                            'category.create',
                             'category.show',
                             'category.edit',
                         ].some(active => route().current(active))}>
