@@ -20,6 +20,11 @@ return new class extends Migration
             $table->dateTime('datetime');
             $table->string('contact', 14);
             $table->dateTime('checkout');
+            /* Midtrans */
+            $table->uuid('order_id');
+            $table->integer('gross_amount');
+            $table->string('token')->nullable();
+            /* End Midtrans */
             $table->boolean('is_paid')->default(false);
             $table->boolean('status')->default(false);
             $table->timestamps();

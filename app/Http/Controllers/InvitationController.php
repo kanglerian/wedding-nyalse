@@ -17,7 +17,7 @@ class InvitationController extends Controller
     public function index()
     {
         $templates = Template::all();
-        $invitations = Invitation::with(['template','user'])->paginate(5);
+        $invitations = Invitation::with(['template', 'user'])->paginate(5);
         return Inertia::render('Invitation/Invitation', [
             'templates' => $templates,
             'invitations' => $invitations,
@@ -44,21 +44,55 @@ class InvitationController extends Controller
             'contact' => 'required|min:13|max:14',
         ]);
 
-        // try {
-            Invitation::create([
-                'uuid' => Str::uuid(),
-                'user_id' => 2,
-                'invoice' => date('ymd'),
-                'checkout' => Carbon::now()->setTimezone('Asia/Jakarta'),
-                'template_id' => $request->input('template'),
-                'datetime' => Carbon::now()->setTimezone('Asia/Jakarta'),
-                'contact' => $request->input('contact'),
-            ]);
+        \Midtrans\Config::$serverKey = 'SB-Mid-server-DTLdj-m3UCy7jzrRNdeLix3b';
+        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
 
-            return redirect()->route('invitation.index')->with([
-                '201' => 201,
-                'message' => 'Invitation checkout successfully.'
-            ], 201);
+        // try {
+        $uuid = Str::uuid();
+
+        $params = array(
+            'transaction_details' => array(
+                'order_id' => $uuid,
+                'gross_amount' => 12000,
+            ),
+            'customer_details' => array(
+                'first_name' => 'budi',
+                'last_name' => 'pratama',
+                'email' => 'budi.pra@example.com',
+                'phone' => '08111222333',
+            ),
+        );
+
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+        $data = [
+            'uuid' => $uuid,
+            'user_id' => 2,
+            'invoice' => date('ymd h:s:m'),
+            'checkout' => Carbon::now()->setTimezone('Asia/Jakarta'),
+            'template_id' => $request->input('template'),
+            'datetime' => Carbon::now()->setTimezone('Asia/Jakarta'),
+            'contact' => $request->input('contact'),
+            'order_id' => $uuid,
+            'gross_amount' => 12000,
+            'token' => $snapToken
+        ];
+
+        Invitation::create($data);
+
+        return redirect()->route('invitation.index')->with([
+            'code' => 201,
+            'message' => 'Invitation checkout successfully.',
+            'token' => $snapToken,
+        ], 201);
+
+        // return redirect()->route('invitation.index')->with([
+        //     'code' => 201,
+        //     'message' => 'Invitation checkout successfully.'
+        // ], 201);
+
         // } catch (\Throwable $th) {
         //     if ($th->getCode() == 23000) {
         //         return redirect()->route('invitation.index')->with([

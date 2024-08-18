@@ -38,6 +38,23 @@ export default function Invitation({ auth }) {
         contact: "",
     });
 
+    const handlePay = (invitation) => {
+        window.snap.pay(invitation.token, {
+            onSuccess: function (result) {
+                console.log(result);
+            },
+            onPending: function (result) {
+                console.log(result);
+            },
+            onError: function (result) {
+                console.log(result);
+            },
+            onClose: function (result) {
+                console.log(result);
+            }
+        });
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const submitAction = modalCreate ? post : patch;
@@ -46,7 +63,9 @@ export default function Invitation({ auth }) {
             : route("invitation.update", data.id);
         submitAction(routeAction, {
             preserveScroll: true,
-            onSuccess: () => {
+            onSuccess: (page) => {
+                const res = page.props.flash;
+                window.snap.pay(res.token);
                 setShowAlert(true);
                 setModalCreate(false);
                 setModalEdit(false);
@@ -222,6 +241,7 @@ export default function Invitation({ auth }) {
                                                         {invitation.template.name}
                                                     </td>
                                                     <td className="px-6 py-4 flex justify-start gap-1">
+                                                        <button type="button" onClick={() => handlePay(invitation)}>Bayar</button>
                                                         <button
                                                             onClick={() =>
                                                                 handleStatus(
@@ -234,7 +254,7 @@ export default function Invitation({ auth }) {
                                                             {
                                                                 invitation.status ? (
                                                                     <i className="fa-solid fa-toggle-on"></i>
-                                                                ):(
+                                                                ) : (
                                                                     <i className="fa-solid fa-toggle-off"></i>
                                                                 )
                                                             }

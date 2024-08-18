@@ -42,7 +42,7 @@ class CategoryController extends Controller
             ]);
 
             return redirect()->route('category.index')->with([
-                '201' => 201,
+                'code' => 201,
                 'message' => 'Category created successfully.'
             ], 201);
         } catch (\Throwable $th) {

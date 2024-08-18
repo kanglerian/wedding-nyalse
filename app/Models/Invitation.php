@@ -22,6 +22,11 @@ class Invitation extends Model {
         'datetime',
         'contact',
         'checkout',
+        /* Midtrans */
+        'order_id',
+        'gross_amount',
+        'token',
+        /* End Midtrans */
         'is_paid',
         'status',
     ];

@@ -74,7 +74,7 @@ class TemplateController extends Controller
             ]);
 
             return redirect()->route('template.index')->with([
-                '201' => 201,
+                'code' => 201,
                 'message' => 'Template created successfully.'
             ], 201);
         } catch (\Throwable $th) {

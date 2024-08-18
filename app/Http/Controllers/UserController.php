@@ -47,7 +47,7 @@ class UserController extends Controller
             ]);
 
             return redirect()->route('user.index')->with([
-                '201' => 201,
+                'code' => 201,
                 'message' => 'User created successfully.'
             ], 201);
         } catch (\Throwable $th) {
