@@ -49,4 +49,8 @@ class User extends Authenticatable
     public function template(){
         return $this->hasMany(Template::class, 'user_id');
     }
+    
+    public function invitation(){
+        return $this->hasMany(Invitation::class, 'user_id');
+    }
 }

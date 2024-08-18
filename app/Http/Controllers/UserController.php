@@ -36,16 +36,33 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|min:5|max:100|unique:users,name',
             'email' => 'required|email|min:5|max:100|unique:users,email',
-            'password' => 'required|min:8'
+            'password' => 'required|min:8|confirmed'
         ]);
 
-        User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-        ]);
+        try {
+            User::create([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'password' => Hash::make($request->input('password')),
+            ]);
 
-        return redirect()->route('user.index')->with('message', 'User created successfully.');
+            return redirect()->route('user.index')->with([
+                '201' => 201,
+                'message' => 'User created successfully.'
+            ], 201);
+        } catch (\Throwable $th) {
+            if ($th->getCode() == 23000) {
+                return redirect()->route('user.index')->with([
+                    'code' => 23000,
+                    'message' => 'Operasi gagal karena adanya keterbatasan pada data terkait.',
+                ], 23000);
+            } else {
+                return redirect()->route('user.index')->with([
+                    'code' => 500,
+                    'message' => 'Maaf, ada masalah teknis di sisi server.'
+                ], 500);
+            }
+        }
     }
 
     /**
@@ -74,11 +91,28 @@ class UserController extends Controller
             'email' => 'required|email|min:5|max:100|unique:users,email,' . $user->id,
         ]);
 
-        $user->update([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-        ]);
-        return redirect()->route('user.index')->with('message','Category updated successfully.');
+        try {
+            $user->update([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+            ]);
+            return redirect()->route('user.index')->with([
+                'code' => 204,
+                'message' => 'User updated successfully.'
+            ], 204);
+        } catch (\Throwable $th) {
+            if ($th->getCode() == 23000) {
+                return redirect()->route('user.index')->with([
+                    'code' => 23000,
+                    'message' => 'Operasi gagal karena adanya keterbatasan pada data terkait.',
+                ], 23000);
+            } else {
+                return redirect()->route('user.index')->with([
+                    'code' => 500,
+                    'message' => 'Maaf, ada masalah teknis di sisi server.'
+                ], 500);
+            }
+        }
     }
 
     /**
@@ -86,18 +120,53 @@ class UserController extends Controller
      */
     public function status(User $user)
     {
-        $user->update([
-            'status' => !$user->status,
-        ]);
+        try {
+            $user->update([
+                'status' => !$user->status,
+            ]);
 
-        return redirect()->route('user.index')->with('message','User status updated successfully.');
+            return redirect()->route('user.index')->with([
+                'code' => 204,
+                'message' => 'User status updated successfully.'
+            ], 204);
+        } catch (\Throwable $th) {
+            if ($th->getCode() == 23000) {
+                return redirect()->route('user.index')->with([
+                    'code' => 23000,
+                    'message' => 'Operasi gagal karena adanya keterbatasan pada data terkait.',
+                ], 23000);
+            } else {
+                return redirect()->route('user.index')->with([
+                    'code' => 500,
+                    'message' => 'Maaf, ada masalah teknis di sisi server.'
+                ], 500);
+            }
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        try {
+            $user->delete();
+            return redirect()->route('user.index')->with([
+                'code' => 200,
+                'message' => 'User deleted successfully.'
+            ], 200);
+        } catch (\Throwable $th) {
+            if ($th->getCode() == 23000) {
+                return redirect()->route('user.index')->with([
+                    'code' => 23000,
+                    'message' => 'Operasi gagal karena adanya keterbatasan pada data terkait.',
+                ], 23000);
+            } else {
+                return redirect()->route('user.index')->with([
+                    'code' => 500,
+                    'message' => 'Maaf, ada masalah teknis di sisi server.'
+                ], 500);
+            }
+        }
     }
 }

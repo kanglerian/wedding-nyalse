@@ -15,6 +15,17 @@ export default function Template({ auth }) {
     const currentNameInput = useRef();
     const currentPriceInput = useRef();
 
+    const codeMap = {
+        200: { icon: 'fa-check', textClass: 'text-emerald-500', bgClass: 'bg-emerald-100' },
+        201: { icon: 'fa-check', textClass: 'text-blue-500', bgClass: 'bg-blue-100' },
+        204: { icon: 'fa-check', textClass: 'text-blue-500', bgClass: 'bg-blue-100' },
+        23000: { icon: 'fa-times', textClass: 'text-red-500', bgClass: 'bg-red-100' },
+        500: { icon: 'fa-exclamation-triangle', textClass: 'text-yellow-500', bgClass: 'bg-yellow-100' },
+        default: { icon: 'fa-info', textClass: 'text-gray-500', bgClass: 'bg-gray-100' }
+    };
+
+    const { icon, textClass, bgClass } = codeMap[flash.code] || codeMap.default;
+
     const {
         post,
         patch,
@@ -124,11 +135,11 @@ export default function Template({ auth }) {
                     <div className="px-5">
                         {showAlert && (
                             <div
-                                className="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-2xl shadow-sm"
+                                className="flex items-center w-full p-4 mb-4 text-gray-500 bg-white rounded-2xl shadow-sm"
                                 role="alert"
                             >
-                                <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-emerald-500 bg-emerald-100 rounded-xl">
-                                    <i className="fa-solid fa-check"></i>
+                                <div className={`inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-xl ${textClass} ${bgClass}`}>
+                                    <i className={`fa-solid ${icon}`}></i>
                                 </div>
                                 <div className="ms-3 text-sm font-normal">
                                     {flash.message}
@@ -338,7 +349,7 @@ export default function Template({ auth }) {
                                             >
                                                 Authors
                                             </label>
-                                            <select id="author" name="author" ref={currentAuthorInput} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 px-3" value={data.author} onChange={(e) => setData("author", e.target.value)} required={true}>
+                                            <select id="author" name="author" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 px-3" value={data.author} onChange={(e) => setData("author", e.target.value)} required={true}>
                                                 <option>Choose an author</option>
                                                 {
                                                     authors.length > 0 ? (
@@ -359,7 +370,6 @@ export default function Template({ auth }) {
                                     }
                                     {
                                         modalCreate &&
-
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="category"
@@ -367,7 +377,7 @@ export default function Template({ auth }) {
                                             >
                                                 Category
                                             </label>
-                                            <select id="category" name="aucategorythor" ref={currentCategoryInput} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 px-3" value={data.category} onChange={(e) => setData("category", e.target.value)} required={true}>
+                                            <select id="category" name="category" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 px-3" value={data.category} onChange={(e) => setData("category", e.target.value)} required={true}>
                                                 <option>Choose a category</option>
                                                 {
                                                     categories.length > 0 &&
@@ -392,7 +402,6 @@ export default function Template({ auth }) {
                                         </label>
                                         <input
                                             type="text"
-                                            ref={currentNameInput}
                                             value={data.name}
                                             onChange={(e) =>
                                                 setData("name", e.target.value)
@@ -418,7 +427,6 @@ export default function Template({ auth }) {
                                         </label>
                                         <input
                                             type="number"
-                                            ref={currentPriceInput}
                                             value={data.price}
                                             onChange={(e) =>
                                                 setData("price", e.target.value)

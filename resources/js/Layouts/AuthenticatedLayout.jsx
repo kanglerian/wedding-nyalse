@@ -24,6 +24,14 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
+                                <NavLink href={route('invitation.index')} active={[
+                                    'invitation.index',
+                                    'invitation.create',
+                                    'invitation.show',
+                                    'invitation.edit',
+                                ].some(active => route().current(active))}>
+                                    Invitations
+                                </NavLink>
                                 <NavLink href={route('template.index')} active={[
                                     'template.index',
                                     'template.create',
@@ -118,6 +126,14 @@ export default function Authenticated({ user, header, children }) {
                     <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink href={route('dashboard')} active={route().current('dashboard')}>
                             Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('invitation.index')} active={[
+                            'invitation.index',
+                            'invitation.create',
+                            'invitation.show',
+                            'invitation.edit',
+                        ].some(active => route().current(active))}>
+                            Invitations
                         </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('template.index')} active={[
                             'template.index',

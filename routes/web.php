@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TemplateController;
@@ -40,6 +41,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('user', UserController::class);
     Route::patch('/user/status/{user}', [UserController::class, 'status'])->name('user.status');
+
+    Route::resource('invitation', InvitationController::class);
 });
 
 require __DIR__.'/auth.php';

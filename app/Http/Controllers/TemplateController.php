@@ -17,8 +17,8 @@ class TemplateController extends Controller
     public function index()
     {
         $categories = Category::all();
-        $templates = Template::with(['category','author'])->paginate(5);
-        $authors = User::where('role','P')->get();
+        $templates = Template::with(['category', 'author'])->paginate(5);
+        $authors = User::where('role', 'P')->get();
         return Inertia::render('Template/Template', [
             'categories' => $categories,
             'templates' => $templates,
@@ -60,19 +60,36 @@ class TemplateController extends Controller
 
         $folderPath = resource_path("js/Pages/Invitation/{$code}");
 
-        if (!File::exists($folderPath)) {
-            File::makeDirectory($folderPath, 0755, true);
+        try {
+            if (!File::exists($folderPath)) {
+                File::makeDirectory($folderPath, 0755, true);
+            }
+
+            Template::create([
+                'user_id' => $request->input('author'),
+                'category_id' => $request->input('category'),
+                'code' => $code,
+                'name' => $request->input('name'),
+                'price' => $request->input('price'),
+            ]);
+
+            return redirect()->route('template.index')->with([
+                '201' => 201,
+                'message' => 'Template created successfully.'
+            ], 201);
+        } catch (\Throwable $th) {
+            if ($th->getCode() == 23000) {
+                return redirect()->route('template.index')->with([
+                    'code' => 23000,
+                    'message' => 'Operasi gagal karena adanya keterbatasan pada data terkait.',
+                ], 23000);
+            } else {
+                return redirect()->route('template.index')->with([
+                    'code' => 500,
+                    'message' => 'Maaf, ada masalah teknis di sisi server.'
+                ], 500);
+            }
         }
-
-        Template::create([
-            'user_id' => $request->input('author'),
-            'category_id' => $request->input('category'),
-            'code' => $code,
-            'name' => $request->input('name'),
-            'price' => $request->input('price'),
-        ]);
-
-        return redirect()->route('template.index')->with('message', 'Template created successfully.');
     }
 
     /**
@@ -100,12 +117,30 @@ class TemplateController extends Controller
             'name' => 'required',
             'price' => 'required|integer|min:0'
         ]);
-        $template->update([
-            'name' => $request->input('name'),
-            'price' => $request->input('price'),
-        ]);
 
-        return redirect()->route('template.index')->with('message','Template updated successfully.');
+        try {
+            $template->update([
+                'name' => $request->input('name'),
+                'price' => $request->input('price'),
+            ]);
+
+            return redirect()->route('template.index')->with([
+                'code' => 204,
+                'message' => 'User updated successfully.'
+            ], 204);
+        } catch (\Throwable $th) {
+            if ($th->getCode() == 23000) {
+                return redirect()->route('template.index')->with([
+                    'code' => 23000,
+                    'message' => 'Operasi gagal karena adanya keterbatasan pada data terkait.',
+                ], 23000);
+            } else {
+                return redirect()->route('template.index')->with([
+                    'code' => 500,
+                    'message' => 'Maaf, ada masalah teknis di sisi server.'
+                ], 500);
+            }
+        }
     }
 
     /**
@@ -113,11 +148,28 @@ class TemplateController extends Controller
      */
     public function status(Template $template)
     {
-        $template->update([
-            'status' => !$template->status,
-        ]);
+        try {
+            $template->update([
+                'status' => !$template->status,
+            ]);
 
-        return redirect()->route('template.index')->with('message','Template status updated successfully.');
+            return redirect()->route('template.index')->with([
+                'code' => 204,
+                'message' => 'Template status updated successfully.'
+            ], 204);
+        } catch (\Throwable $th) {
+            if ($th->getCode() == 23000) {
+                return redirect()->route('template.index')->with([
+                    'code' => 23000,
+                    'message' => 'Operasi gagal karena adanya keterbatasan pada data terkait.',
+                ], 23000);
+            } else {
+                return redirect()->route('template.index')->with([
+                    'code' => 500,
+                    'message' => 'Maaf, ada masalah teknis di sisi server.'
+                ], 500);
+            }
+        }
     }
 
     /**
@@ -125,7 +177,24 @@ class TemplateController extends Controller
      */
     public function destroy(Template $template)
     {
-        $template->delete();
-        return redirect()->route('template.index')->with('message','Template deleted successfully.');
+        try {
+            $template->delete();
+            return redirect()->route('template.index')->with([
+                'code' => 200,
+                'message' => 'Template deleted successfully.'
+            ], 200);
+        } catch (\Throwable $th) {
+            if ($th->getCode() == 23000) {
+                return redirect()->route('template.index')->with([
+                    'code' => 23000,
+                    'message' => 'Operasi gagal karena adanya keterbatasan pada data terkait.',
+                ], 23000);
+            } else {
+                return redirect()->route('template.index')->with([
+                    'code' => 500,
+                    'message' => 'Maaf, ada masalah teknis di sisi server.'
+                ], 500);
+            }
+        }
     }
 }

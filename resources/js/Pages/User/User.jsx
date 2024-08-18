@@ -5,6 +5,7 @@ import { useRef } from "react";
 
 export default function User({ auth }) {
     const { users, flash } = usePage().props;
+
     const [modalCreate, setModalCreate] = useState(false);
     const [modalEdit, setModalEdit] = useState(false);
     const [modalDelete, setModalDelete] = useState(false);
@@ -13,6 +14,18 @@ export default function User({ auth }) {
     const currentNameInput = useRef();
     const currentEmailInput = useRef();
     const currentPasswordInput = useRef();
+    const currentPasswordConfirmationInput = useRef();
+
+    const codeMap = {
+        200: { icon: 'fa-check', textClass: 'text-emerald-500', bgClass: 'bg-emerald-100' },
+        201: { icon: 'fa-check', textClass: 'text-blue-500', bgClass: 'bg-blue-100' },
+        204: { icon: 'fa-check', textClass: 'text-blue-500', bgClass: 'bg-blue-100' },
+        23000: { icon: 'fa-times', textClass: 'text-red-500', bgClass: 'bg-red-100' },
+        500: { icon: 'fa-exclamation-triangle', textClass: 'text-yellow-500', bgClass: 'bg-yellow-100' },
+        default: { icon: 'fa-info', textClass: 'text-gray-500', bgClass: 'bg-gray-100' }
+    };
+
+    const { icon, textClass, bgClass } = codeMap[flash.code] || codeMap.default;
 
     const {
         post,
@@ -27,7 +40,9 @@ export default function User({ auth }) {
     } = useForm({
         id: "",
         name: "",
-        email: ""
+        email: "",
+        password: "",
+        password_confirmation: ""
     });
 
     const handleSubmit = (event) => {
@@ -121,11 +136,11 @@ export default function User({ auth }) {
                     <div className="px-5">
                         {showAlert && (
                             <div
-                                className="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-2xl shadow-sm"
+                                className="flex items-center w-full p-4 mb-4 text-gray-500 bg-white rounded-2xl shadow-sm"
                                 role="alert"
                             >
-                                <div className="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-emerald-500 bg-emerald-100 rounded-xl">
-                                    <i className="fa-solid fa-check"></i>
+                                <div className={`inline-flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-xl ${textClass} ${bgClass}`}>
+                                    <i className={`fa-solid ${icon}`}></i>
                                 </div>
                                 <div className="ms-3 text-sm font-normal">
                                     {flash.message}
@@ -323,7 +338,6 @@ export default function User({ auth }) {
                                         </label>
                                         <input
                                             type="text"
-                                            ref={currentNameInput}
                                             value={data.name}
                                             onChange={(e) =>
                                                 setData("name", e.target.value)
@@ -349,7 +363,6 @@ export default function User({ auth }) {
                                         </label>
                                         <input
                                             type="email"
-                                            ref={currentEmailInput}
                                             value={data.email}
                                             onChange={(e) =>
                                                 setData("email", e.target.value)
@@ -377,7 +390,6 @@ export default function User({ auth }) {
                                             </label>
                                             <input
                                                 type="password"
-                                                ref={currentPasswordInput}
                                                 value={data.password}
                                                 onChange={(e) =>
                                                     setData("password", e.target.value)
@@ -386,6 +398,34 @@ export default function User({ auth }) {
                                                 id="password"
                                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 px-3"
                                                 placeholder="Password"
+                                                required={true}
+                                            />
+                                            {errors.password && (
+                                                <p className="text-xs text-red-600 mt-2">
+                                                    {errors.password}
+                                                </p>
+                                            )}
+                                        </div>
+                                    }
+                                    {
+                                        modalCreate &&
+                                        <div className="col-span-2">
+                                            <label
+                                                htmlFor="password_confirmation"
+                                                className="block mb-2 text-sm font-medium text-gray-900"
+                                            >
+                                                Password Confirmation
+                                            </label>
+                                            <input
+                                                type="password"
+                                                value={data.password_confirmation}
+                                                onChange={(e) =>
+                                                    setData("password_confirmation", e.target.value)
+                                                }
+                                                name="password_confirmation"
+                                                id="password_confirmation"
+                                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 px-3"
+                                                placeholder="Password Confirmation"
                                                 required={true}
                                             />
                                             {errors.password && (

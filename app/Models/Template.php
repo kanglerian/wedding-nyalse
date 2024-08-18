@@ -22,6 +22,10 @@ class Template extends Model
         'status' => 'boolean',
     ];
 
+    public function invitation(){
+        return $this->hasMany(Invitation::class, 'template_id');
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
