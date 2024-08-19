@@ -65,7 +65,9 @@ export default function Invitation({ auth }) {
             preserveScroll: true,
             onSuccess: (page) => {
                 const res = page.props.flash;
-                window.snap.pay(res.token);
+                if(res.token){
+                    window.snap.pay(res.token);
+                }
                 setShowAlert(true);
                 setModalCreate(false);
                 setModalEdit(false);
@@ -138,9 +140,9 @@ export default function Invitation({ auth }) {
     return (
         <AuthenticatedLayout
             user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight text-center md:text-left">invitation</h2>}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight text-center md:text-left">Invitation</h2>}
         >
-            <Head title="invitation" />
+            <Head title="Invitations" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-3">
@@ -200,9 +202,6 @@ export default function Invitation({ auth }) {
                                             Client
                                         </th>
                                         <th scope="col" className="px-6 py-4">
-                                            Template
-                                        </th>
-                                        <th scope="col" className="px-6 py-4">
                                             Payment
                                         </th>
                                         <th scope="col" className="px-6 py-4 rounded-tr-xl">
@@ -241,9 +240,6 @@ export default function Invitation({ auth }) {
                                                         <span>{invitation.user.name}</span>
                                                         {" "}
                                                         <span>({invitation.contact})</span>
-                                                    </td>
-                                                    <td className="px-6 py-4 text-nowrap">
-                                                        {invitation.template.name}
                                                     </td>
                                                     <td className="px-6 py-4 text-center text-nowrap">
                                                         {(() => {
