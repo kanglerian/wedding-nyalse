@@ -55,8 +55,8 @@ class PaymentController extends Controller
         }
 
         return response()->json(['message' => 'Notification handled successfully']);
-        } catch (\Throwable $th) {
-            return response()->json($th->getMessage());
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
         }
     }
 }
