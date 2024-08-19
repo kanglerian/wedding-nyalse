@@ -32,8 +32,6 @@ class PaymentController extends Controller
 
         $order = Invitation::with('user')->where('order_id', $orderId)->first();
 
-        return response()->json($order);
-
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
@@ -48,7 +46,7 @@ class PaymentController extends Controller
             }
         } else if ($transaction === 'settlement') {
             $order->update(['is_paid' => 'success']);
-            // Mail::to($order->user->email)->send(new OrderSuccessMail($order));
+            Mail::to($order->user->email)->send(new OrderSuccessMail($order));
         } else if ($transaction === 'pending') {
             $order->update(['is_paid' => 'pending']);
         } else if (in_array($transaction, ['deny', 'expire', 'cancel'])) {

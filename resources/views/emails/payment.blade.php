@@ -15,7 +15,7 @@
 <body>
     <main>
         <header>
-            <p>Halo {{ $data['payment_status'] ?? 'Calon Mahasiswa' }},</p>
+            {{-- <p>Halo {{ $data['payment_status'] ?? 'Calon Mahasiswa' }},</p> --}}
             <p>Selamat! Kami dengan senang hati menginformasikan bahwa proses registrasi kuliah Anda telah berhasil. Berikut adalah rincian pendaftaran Anda:</p>
         </header>
         <p>Apabila Anda memerlukan bantuan atau memiliki pertanyaan lebih lanjut, jangan ragu untuk menghubungi kami melalui Whatsapp {{ $data['presenter'] ?? 'Administrator' }} yang tertera pada portal E-PMB.</p>
