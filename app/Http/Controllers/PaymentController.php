@@ -30,9 +30,9 @@ class PaymentController extends Controller
         $orderId = $notification->order_id;
         $fraud = $notification->fraud_status;
 
-        return response()->json($transaction);
+        $order = Invitation::where('order_id', $orderId)->first();
 
-        // $order = Invitation::where('order_id', $orderId)->first();
+        return response()->json($order);
 
         // if (!$order) {
         //     return response()->json(['message' => 'Order not found'], 404);
