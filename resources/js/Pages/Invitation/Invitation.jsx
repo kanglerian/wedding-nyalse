@@ -202,6 +202,9 @@ export default function Invitation({ auth }) {
                                         <th scope="col" className="px-6 py-4">
                                             Template
                                         </th>
+                                        <th scope="col" className="px-6 py-4">
+                                            Payment
+                                        </th>
                                         <th scope="col" className="px-6 py-4 rounded-tr-xl">
                                             Action
                                         </th>
@@ -241,6 +244,9 @@ export default function Invitation({ auth }) {
                                                     </td>
                                                     <td className="px-6 py-4 text-nowrap">
                                                         {invitation.template.name}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-nowrap">
+                                                        {invitation.is_paid}
                                                     </td>
                                                     <td className="px-6 py-4 flex justify-start gap-1">
                                                         <button type="button" onClick={() => handlePay(invitation)}
@@ -296,7 +302,7 @@ export default function Invitation({ auth }) {
                                     ) : (
                                         <tr className="bg-white border-b">
                                             <td
-                                                colSpan="7"
+                                                colSpan="8"
                                                 className="px-6 py-4 text-center"
                                             >
                                                 Data not found.
