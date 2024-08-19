@@ -42,11 +42,13 @@ class PaymentController extends Controller
                         $order->update(['is_paid' => 'pending']);
                     } else {
                         $order->update(['is_paid' => 'success']);
+                        $order->update(['status' => true]);
                         Mail::to($order->user->email)->send(new InvitationPaymentSuccess($order));
                     }
                 }
             } else if ($transaction === 'settlement') {
                 $order->update(['is_paid' => 'success']);
+                $order->update(['status' => true]);
                 Mail::to($order->user->email)->send(new InvitationPaymentSuccess($order));
             } else if ($transaction === 'pending') {
                 $order->update(['is_paid' => 'pending']);
