@@ -19,15 +19,15 @@ class PaymentController extends Controller
         \Midtrans\Config::$isSanitized = true;
         \Midtrans\Config::$is3ds = true;
 
-        $notification = new Notification();
+        // $notification = new Notification();
 
         // Log::info('Notification received', ['notification' => $notification]);
 
-        $transaction = $notification->transaction_status;
-        $type = $notification->payment_type;
+        // $transaction = $notification->transaction_status;
+        // $type = $notification->payment_type;
         // $orderId = $notification->order_id;
         $orderId = '6dc33ade-cd77-4de7-bc56-d0e251e3559d';
-        $fraud = $notification->fraud_status;
+        // $fraud = $notification->fraud_status;
 
         // $order = Invitation::where('order_id', $orderId)->first();
         return response()->json($orderId);
