@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\InvitationPayment;
 use App\Mail\OrderSuccessMail;
 use App\Models\Invitation;
 use Illuminate\Http\Request;
@@ -47,7 +48,7 @@ class PaymentController extends Controller
             }
         } else if ($transaction === 'settlement') {
             $order->update(['is_paid' => 'success']);
-            Mail::to($order->user->email)->send(new OrderSuccessMail($order));
+            Mail::to($order->user->email)->send(new InvitationPayment($order));
         } else if ($transaction === 'pending') {
             $order->update(['is_paid' => 'pending']);
         } else if (in_array($transaction, ['deny', 'expire', 'cancel'])) {
