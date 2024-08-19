@@ -13,7 +13,8 @@ class PaymentController extends Controller
 {
     public function handleNotification(Request $request)
     {
-        \Midtrans\Config::$serverKey = 'SB-Mid-server-DTLdj-m3UCy7jzrRNdeLix3b';
+        try {
+            \Midtrans\Config::$serverKey = 'SB-Mid-server-DTLdj-m3UCy7jzrRNdeLix3b';
         \Midtrans\Config::$isProduction = false;
         \Midtrans\Config::$isSanitized = true;
         \Midtrans\Config::$is3ds = true;
@@ -54,5 +55,8 @@ class PaymentController extends Controller
         }
 
         return response()->json(['message' => 'Notification handled successfully']);
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage());
+        }
     }
 }
