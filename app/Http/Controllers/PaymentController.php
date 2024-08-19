@@ -14,20 +14,20 @@ class PaymentController extends Controller
     public function handleNotification(Request $request)
     {
         // try {
-        \Midtrans\Config::$serverKey = 'SB-Mid-server-DTLdj-m3UCy7jzrRNdeLix3b';
-        \Midtrans\Config::$isProduction = false;
-        \Midtrans\Config::$isSanitized = true;
-        \Midtrans\Config::$is3ds = true;
+        // \Midtrans\Config::$serverKey = 'SB-Mid-server-DTLdj-m3UCy7jzrRNdeLix3b';
+        // \Midtrans\Config::$isProduction = false;
+        // \Midtrans\Config::$isSanitized = true;
+        // \Midtrans\Config::$is3ds = true;
 
-        $notification = new Notification();
+        // $notification = new Notification();
 
-        Log::info('Notification received', ['notification' => $notification]);
+        // Log::info('Notification received', ['notification' => $notification]);
 
-        $transaction = $notification->transaction_status;
-        $type = $notification->payment_type;
+        // $transaction = $notification->transaction_status;
+        // $type = $notification->payment_type;
         // $orderId = $notification->order_id;
         $orderId = '6dc33ade-cd77-4de7-bc56-d0e251e3559d';
-        $fraud = $notification->fraud_status;
+        // $fraud = $notification->fraud_status;
 
         // $order = Invitation::where('order_id', $orderId)->first();
         return response()->json($orderId);
