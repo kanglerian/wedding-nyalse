@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/user/status/{user}', [UserController::class, 'status'])->name('user.status');
 
     Route::resource('invitation', InvitationController::class);
+    Route::patch('/invitation/status/{invitation}', [InvitationController::class, 'status'])->name('invitation.status');
 });
 
 require __DIR__.'/auth.php';

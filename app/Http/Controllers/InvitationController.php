@@ -184,6 +184,35 @@ class InvitationController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     */
+    public function status(Invitation $invitation)
+    {
+        try {
+            $invitation->update([
+                'status' => !$invitation->status,
+            ]);
+
+            return redirect()->route('invitation.index')->with([
+                'code' => 204,
+                'message' => 'Invitation status updated successfully.'
+            ], 204);
+        } catch (\Throwable $th) {
+            if ($th->getCode() == 23000) {
+                return redirect()->route('invitation.index')->with([
+                    'code' => 23000,
+                    'message' => 'Operasi gagal karena adanya keterbatasan pada data terkait.',
+                ], 23000);
+            } else {
+                return redirect()->route('invitation.index')->with([
+                    'code' => 500,
+                    'message' => 'Maaf, ada masalah teknis di sisi server.'
+                ], 500);
+            }
+        }
+    }
+
+    /**
      * Remove the specified resource from storage.
      */
     public function destroy(Invitation $invitation)

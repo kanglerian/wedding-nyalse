@@ -245,14 +245,28 @@ export default function Invitation({ auth }) {
                                                     <td className="px-6 py-4 text-nowrap">
                                                         {invitation.template.name}
                                                     </td>
-                                                    <td className="px-6 py-4 text-nowrap">
-                                                        {invitation.is_paid}
+                                                    <td className="px-6 py-4 text-center text-nowrap">
+                                                        {(() => {
+                                                            switch (invitation.is_paid) {
+                                                                case 'success':
+                                                                    return <i className="fas fa-check-circle text-green-500"></i>;
+                                                                case 'pending':
+                                                                    return <i className="fas fa-clock text-yellow-500"></i>;
+                                                                case 'failed':
+                                                                    return <i className="fas fa-times-circle text-red-500"></i>;
+                                                                default:
+                                                                    return <i className="fas fa-exclamation-circle text-gray-500"></i>;
+                                                            }
+                                                        })()}
                                                     </td>
                                                     <td className="px-6 py-4 flex justify-start gap-1">
-                                                        <button type="button" onClick={() => handlePay(invitation)}
-                                                            className="text-white bg-sky-500 hover:bg-sky-600 transition-all ease-in-out font-medium rounded-xl text-sm px-3 py-1.5 text-center">
+                                                        {
+                                                            (invitation.is_paid === 'pending' || invitation.is_paid === null) &&
+                                                            <button type="button" onClick={() => handlePay(invitation)}
+                                                                className="text-white bg-sky-500 hover:bg-sky-600 transition-all ease-in-out font-medium rounded-xl text-sm px-3 py-1.5 text-center">
                                                                 <i className="fa-solid fa-file-invoice"></i>
                                                             </button>
+                                                        }
                                                         <button
                                                             onClick={() =>
                                                                 handleStatus(
@@ -270,6 +284,7 @@ export default function Invitation({ auth }) {
                                                                 )
                                                             }
                                                         </button>
+                                                        {/* <span className="bg-emerald-500 hover:bg-emerald-600"></span> */}
                                                         <button
                                                             onClick={() =>
                                                                 handleEditClick(
