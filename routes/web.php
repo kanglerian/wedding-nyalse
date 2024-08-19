@@ -46,4 +46,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('invitation', InvitationController::class);
 });
 
+Route::post('/payment/notification', [PaymentController::class, 'handleNotification']);
+
 require __DIR__.'/auth.php';
