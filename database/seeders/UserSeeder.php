@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             [
                 "name" => "Administrator",
-                "email" => "admin@nyalse.id",
+                "email" => "kanglerian@nyalse.id",
                 "password" => Hash::make("12345678"),
                 "role" => "A",
                 "created_at" => Carbon::now()->setTimezone('Asia/Jakarta'),

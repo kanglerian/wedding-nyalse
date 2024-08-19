@@ -6,6 +6,7 @@ use App\Models\Invitation;
 use App\Models\Template;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Str;
 
@@ -38,9 +39,8 @@ class InvitationController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            // 'user_id' => 'required',
             'template' => 'required',
-            // 'datetime' => 'required|date',
+            'datetime' => 'required|date',
             'contact' => 'required|min:13|max:14',
         ]);
 
@@ -50,18 +50,40 @@ class InvitationController extends Controller
         \Midtrans\Config::$is3ds = true;
 
         // try {
+        $date = date('ymd');
         $uuid = Str::uuid();
+        $template = Template::find($request->input('template'));
+
+        $counter = 1;
+        $invoice = "I" . $date . $template->code . Auth::user()->id . $counter;
+
+        while (Invitation::where('invoice', $invoice)->exists()) {
+            $counter++;
+            $invoice = "I" . $date . $template->code . Auth::user()->id . $counter;
+        }
 
         $params = array(
             'transaction_details' => array(
                 'order_id' => $uuid,
-                'gross_amount' => 12000,
+                'gross_amount' => $template->price,
             ),
+            'item_details' => [
+                [
+                    'id' => $template->code,
+                    'price' => $template->price,
+                    'quantity' => 1,
+                    'name' => $template->name
+                ]
+            ],
             'customer_details' => array(
-                'first_name' => 'budi',
-                'last_name' => 'pratama',
-                'email' => 'budi.pra@example.com',
-                'phone' => '08111222333',
+                'first_name' => Auth::user()->name,
+                'email' => Auth::user()->email,
+                'phone' => $request->input('contact'),
+                'shipping_address' => array(
+                    'first_name' => Auth::user()->name,
+                    'phone' => $request->input('contact'),
+                    'country_code' => 'IDN'
+                )
             ),
         );
 
@@ -69,14 +91,14 @@ class InvitationController extends Controller
 
         $data = [
             'uuid' => $uuid,
-            'user_id' => 2,
-            'invoice' => date('ymd h:s:m'),
+            'user_id' => Auth::user()->id,
+            'invoice' => $invoice,
             'checkout' => Carbon::now()->setTimezone('Asia/Jakarta'),
             'template_id' => $request->input('template'),
             'datetime' => Carbon::now()->setTimezone('Asia/Jakarta'),
             'contact' => $request->input('contact'),
             'order_id' => $uuid,
-            'gross_amount' => 12000,
+            'gross_amount' => $template->price,
             'token' => $snapToken
         ];
 
@@ -129,7 +151,36 @@ class InvitationController extends Controller
      */
     public function update(Request $request, Invitation $invitation)
     {
-        //
+        $request->validate([
+            'template' => 'required',
+            'datetime' => 'required|date',
+            'contact' => 'required|min:13|max:14',
+        ]);
+
+        try {
+            $invitation->update([
+                'template_id' => $request->input('template'),
+                'datetime' => $request->input('datetime'),
+                'contact' => $request->input('contact'),
+            ]);
+
+            return redirect()->route('invitation.index')->with([
+                'code' => 204,
+                'message' => 'Invitation updated successfully.'
+            ], 204);
+        } catch (\Throwable $th) {
+            if ($th->getCode() == 23000) {
+                return redirect()->route('invitation.index')->with([
+                    'code' => 23000,
+                    'message' => 'Operasi gagal karena adanya keterbatasan pada data terkait.',
+                ], 23000);
+            } else {
+                return redirect()->route('invitation.index')->with([
+                    'code' => 500,
+                    'message' => 'Maaf, ada masalah teknis di sisi server.'
+                ], 500);
+            }
+        }
     }
 
     /**
@@ -137,6 +188,24 @@ class InvitationController extends Controller
      */
     public function destroy(Invitation $invitation)
     {
-        //
+        try {
+            $invitation->delete();
+            return redirect()->route('invitation.index')->with([
+                'code' => 200,
+                'message' => 'Invitation deleted successfully.'
+            ], 200);
+        } catch (\Throwable $th) {
+            if ($th->getCode() == 23000) {
+                return redirect()->route('invitation.index')->with([
+                    'code' => 23000,
+                    'message' => 'Operasi gagal karena adanya keterbatasan pada data terkait.',
+                ], 23000);
+            } else {
+                return redirect()->route('invitation.index')->with([
+                    'code' => 500,
+                    'message' => 'Maaf, ada masalah teknis di sisi server.'
+                ], 500);
+            }
+        }
     }
 }

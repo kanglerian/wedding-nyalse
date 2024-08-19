@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TemplateController;
@@ -44,5 +45,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('invitation', InvitationController::class);
 });
+
+Route::post('/payment/notification', [PaymentController::class, 'handleNotification']);
 
 require __DIR__.'/auth.php';

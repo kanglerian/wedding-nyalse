@@ -225,23 +225,28 @@ export default function Invitation({ auth }) {
                                                             index +
                                                             1}
                                                     </th>
-                                                    <td className="px-6 py-4">
+                                                    <td className="px-6 py-4 text-nowrap">
                                                         {invitation.checkout}
                                                     </td>
-                                                    <td className="px-6 py-4">
+                                                    <td className="px-6 py-4 text-nowrap">
                                                         {invitation.invoice}
                                                     </td>
-                                                    <td className="px-6 py-4">
+                                                    <td className="px-6 py-4 text-nowrap">
                                                         {invitation.datetime}
                                                     </td>
-                                                    <td className="px-6 py-4">
-                                                        {invitation.user.name}
+                                                    <td className="px-6 py-4 text-nowrap">
+                                                        <span>{invitation.user.name}</span>
+                                                        {" "}
+                                                        <span>({invitation.contact})</span>
                                                     </td>
-                                                    <td className="px-6 py-4">
+                                                    <td className="px-6 py-4 text-nowrap">
                                                         {invitation.template.name}
                                                     </td>
                                                     <td className="px-6 py-4 flex justify-start gap-1">
-                                                        <button type="button" onClick={() => handlePay(invitation)}>Bayar</button>
+                                                        <button type="button" onClick={() => handlePay(invitation)}
+                                                            className="text-white bg-sky-500 hover:bg-sky-600 transition-all ease-in-out font-medium rounded-xl text-sm px-3 py-1.5 text-center">
+                                                                <i className="fa-solid fa-file-invoice"></i>
+                                                            </button>
                                                         <button
                                                             onClick={() =>
                                                                 handleStatus(
@@ -383,8 +388,7 @@ export default function Invitation({ auth }) {
                                     } */}
                                     {
                                         modalCreate &&
-
-                                        <div className="col-span-1">
+                                        <div className="col-span-2">
                                             <label
                                                 htmlFor="template"
                                                 className="block mb-2 text-sm font-medium text-gray-900"

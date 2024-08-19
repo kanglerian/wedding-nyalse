@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('invitations', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid');
-            $table->string('invoice')->unique();
+            $table->string('invoice', 30)->unique();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('template_id');
             $table->dateTime('datetime');
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('gross_amount');
             $table->string('token')->nullable();
             /* End Midtrans */
-            $table->boolean('is_paid')->default(false);
+            $table->string('is_paid', 20)->nullable();
             $table->boolean('status')->default(false);
             $table->timestamps();
 
