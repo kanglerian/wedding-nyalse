@@ -21,38 +21,39 @@ class PaymentController extends Controller
         $jsonData = $request->getContent();
         $notification = json_decode($jsonData);
 
-        if (!$notification) {
-            return response()->json(['message' => 'Invalid notification data'], 400);
-        }
+        return response()->json($notification);
+        // if (!$notification) {
+        //     return response()->json(['message' => 'Invalid notification data'], 400);
+        // }
 
-        $transaction = $notification->transaction_status ?? null;
-        $type = $notification->payment_type ?? null;
-        $orderId = $notification->order_id ?? null;
-        $fraud = $notification->fraud_status ?? null;
+        // $transaction = $notification->transaction_status ?? null;
+        // $type = $notification->payment_type ?? null;
+        // $orderId = $notification->order_id ?? null;
+        // $fraud = $notification->fraud_status ?? null;
 
-        $order = Invitation::where('order_id', $orderId)->first();
+        // $order = Invitation::where('order_id', $orderId)->first();
 
-        if (!$order) {
-            return response()->json(['message' => 'Order not found'], 404);
-        }
+        // if (!$order) {
+        //     return response()->json(['message' => 'Order not found'], 404);
+        // }
 
-        if ($transaction === 'capture') {
-            if ($type === 'credit_card') {
-                if ($fraud === 'challenge') {
-                    $order->update(['is_paid' => 'pending']);
-                } else {
-                    $order->update(['is_paid' => 'success']);
-                }
-            }
-        } else if ($transaction === 'settlement') {
-            $order->update(['is_paid' => 'success']);
-            Mail::to($order->user->email)->send(new OrderSuccessMail($order));
-        } else if ($transaction === 'pending') {
-            $order->update(['is_paid' => 'pending']);
-        } else if (in_array($transaction, ['deny', 'expire', 'cancel'])) {
-            $order->update(['is_paid' => 'failed']);
-        }
+        // if ($transaction === 'capture') {
+        //     if ($type === 'credit_card') {
+        //         if ($fraud === 'challenge') {
+        //             $order->update(['is_paid' => 'pending']);
+        //         } else {
+        //             $order->update(['is_paid' => 'success']);
+        //         }
+        //     }
+        // } else if ($transaction === 'settlement') {
+        //     $order->update(['is_paid' => 'success']);
+        //     Mail::to($order->user->email)->send(new OrderSuccessMail($order));
+        // } else if ($transaction === 'pending') {
+        //     $order->update(['is_paid' => 'pending']);
+        // } else if (in_array($transaction, ['deny', 'expire', 'cancel'])) {
+        //     $order->update(['is_paid' => 'failed']);
+        // }
 
-        return response()->json(['message' => 'Notification handled successfully']);
+        // return response()->json(['message' => 'Notification handled successfully']);
     }
 }
