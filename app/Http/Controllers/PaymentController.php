@@ -56,7 +56,7 @@ class PaymentController extends Controller
             return response()->json(['message' => 'Notification handled successfully'], 200);
         } catch (\Exception $e) {
             Log::error('Error processing notification', ['error' => $e->getMessage()]);
-            return response()->json(['message' => 'Internal Server Error'], 500);
+            return response()->json(['message' => $e->getMessage()], 500);
         }
     }
 }
