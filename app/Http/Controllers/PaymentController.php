@@ -32,29 +32,27 @@ class PaymentController extends Controller
 
         $order = Invitation::where('order_id', $orderId)->first();
 
-        return response()->json($order);
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
 
-        // if (!$order) {
-        //     return response()->json(['message' => 'Order not found'], 404);
-        // }
+        if ($transaction === 'capture') {
+            if ($type === 'credit_card') {
+                if ($fraud === 'challenge') {
+                    $order->update(['is_paid' => 'pending']);
+                } else {
+                    $order->update(['is_paid' => 'success']);
+                }
+            }
+        } else if ($transaction === 'settlement') {
+            $order->update(['is_paid' => 'success']);
+            // Mail::to($order->user->email)->send(new OrderSuccessMail($order));
+        } else if ($transaction === 'pending') {
+            $order->update(['is_paid' => 'pending']);
+        } else if (in_array($transaction, ['deny', 'expire', 'cancel'])) {
+            $order->update(['is_paid' => 'failed']);
+        }
 
-        // if ($transaction === 'capture') {
-        //     if ($type === 'credit_card') {
-        //         if ($fraud === 'challenge') {
-        //             $order->update(['is_paid' => 'pending']);
-        //         } else {
-        //             $order->update(['is_paid' => 'success']);
-        //         }
-        //     }
-        // } else if ($transaction === 'settlement') {
-        //     $order->update(['is_paid' => 'success']);
-        //     Mail::to($order->user->email)->send(new OrderSuccessMail($order));
-        // } else if ($transaction === 'pending') {
-        //     $order->update(['is_paid' => 'pending']);
-        // } else if (in_array($transaction, ['deny', 'expire', 'cancel'])) {
-        //     $order->update(['is_paid' => 'failed']);
-        // }
-
-        // return response()->json(['message' => 'Notification handled successfully']);
+        return response()->json(['message' => 'Notification handled successfully']);
     }
 }
