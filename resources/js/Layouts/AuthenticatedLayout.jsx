@@ -143,6 +143,14 @@ export default function Authenticated({ user, header, children }) {
                         ].some(active => route().current(active))}>
                             Template
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink href={route('user.index')} active={[
+                            'user.index',
+                            'user.create',
+                            'user.show',
+                            'user.edit',
+                        ].some(active => route().current(active))}>
+                            Users
+                        </ResponsiveNavLink>
                         <ResponsiveNavLink href={route('setting')} active={[
                             'setting',
                             'category.index',
