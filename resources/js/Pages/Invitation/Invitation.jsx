@@ -284,6 +284,7 @@ export default function Invitation({ auth }) {
                                                                 )
                                                             }
                                                         </button>
+                                                        {/* <span className="bg-emerald-500 hover:bg-emerald-600"></span> */}
                                                         <button
                                                             onClick={() =>
                                                                 handleEditClick(
