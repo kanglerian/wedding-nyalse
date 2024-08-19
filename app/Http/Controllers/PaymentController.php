@@ -32,6 +32,7 @@ class PaymentController extends Controller
 
         $order = Invitation::where('order_id', $orderId)->first();
 
+        return response()->json('data', $order->user->email);
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
