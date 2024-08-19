@@ -10,7 +10,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class InvitationPayment extends Mailable
+class InvitationPaymentSuccess extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -27,7 +27,7 @@ class InvitationPayment extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Pembayaran Undangan Pernikahan Digital',
+            subject: 'Konfirmasi Berhasil: Pembayaran Undangan Pernikahan Digital Anda'
         );
     }
 
@@ -37,7 +37,7 @@ class InvitationPayment extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.payment',
+            view: 'email.invitation.payment.success',
         );
     }
 
