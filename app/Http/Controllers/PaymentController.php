@@ -19,7 +19,7 @@ class PaymentController extends Controller
         \Midtrans\Config::$isSanitized = true;
         \Midtrans\Config::$is3ds = true;
 
-        // $notification = new Notification();
+        $notification = new Notification();
 
         // Log::info('Notification received', ['notification' => $notification]);
 
@@ -30,7 +30,7 @@ class PaymentController extends Controller
         // $fraud = $notification->fraud_status;
 
         // $order = Invitation::where('order_id', $orderId)->first();
-        return response()->json($orderId);
+        return response()->json($notification);
         // if (!$order) {
         //     Log::error('Order not found', ['order_id' => $orderId]);
         //     return response()->json(['message' => 'Order not found'], 404);
