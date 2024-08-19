@@ -29,8 +29,8 @@ class PaymentController extends Controller
         $orderId = '6dc33ade-cd77-4de7-bc56-d0e251e3559d';
         $fraud = $notification->fraud_status;
 
-        $order = Invitation::where('order_id', $orderId)->first();
-        return response()->json($order);
+        // $order = Invitation::where('order_id', $orderId)->first();
+        return response()->json($orderId);
         // if (!$order) {
         //     Log::error('Order not found', ['order_id' => $orderId]);
         //     return response()->json(['message' => 'Order not found'], 404);
