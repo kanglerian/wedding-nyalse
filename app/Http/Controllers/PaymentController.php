@@ -21,15 +21,16 @@ class PaymentController extends Controller
         $jsonData = $request->getContent();
         $notification = json_decode($jsonData);
 
-        return response()->json($notification);
-        // if (!$notification) {
-        //     return response()->json(['message' => 'Invalid notification data'], 400);
-        // }
+        if (!$notification) {
+            return response()->json(['message' => 'Invalid notification data'], 400);
+        }
 
-        // $transaction = $notification->transaction_status ?? null;
-        // $type = $notification->payment_type ?? null;
-        // $orderId = $notification->order_id ?? null;
-        // $fraud = $notification->fraud_status ?? null;
+        $transaction = $notification->transaction_status;
+        $type = $notification->payment_type;
+        $orderId = $notification->order_id;
+        $fraud = $notification->fraud_status;
+
+        return response()->json($transaction);
 
         // $order = Invitation::where('order_id', $orderId)->first();
 
