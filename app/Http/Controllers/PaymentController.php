@@ -40,6 +40,7 @@ class PaymentController extends Controller
                 if ($type === 'credit_card') {
                     if ($fraud === 'challenge') {
                         $order->update(['is_paid' => 'pending']);
+                        $order->update(['status' => false]);
                     } else {
                         $order->update(['is_paid' => 'success']);
                         $order->update(['status' => true]);
@@ -52,8 +53,10 @@ class PaymentController extends Controller
                 Mail::to($order->user->email)->send(new InvitationPaymentSuccess($order));
             } else if ($transaction === 'pending') {
                 $order->update(['is_paid' => 'pending']);
+                $order->update(['status' => false]);
             } else if (in_array($transaction, ['deny', 'expire', 'cancel'])) {
                 $order->update(['is_paid' => 'failed']);
+                $order->update(['status' => false]);
                 Mail::to($order->user->email)->send(new InvitationPaymentFailed($order));
             }
 

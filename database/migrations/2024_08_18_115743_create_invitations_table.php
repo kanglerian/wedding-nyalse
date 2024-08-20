@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('invoice', 30)->unique();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('template_id');
-            $table->dateTime('datetime');
             $table->string('contact', 14);
             $table->dateTime('checkout');
             /* Midtrans */

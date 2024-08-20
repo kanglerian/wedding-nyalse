@@ -19,7 +19,6 @@ class Invitation extends Model {
         'invoice',
         'user_id',
         'template_id',
-        'datetime',
         'contact',
         'checkout',
         /* Midtrans */

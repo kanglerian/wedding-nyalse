@@ -1,7 +1,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { useState, useEffect } from "react";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import { useRef } from "react";
 
 export default function Invitation({ auth }) {
     const { invitations, templates, flash } = usePage().props;
@@ -34,7 +33,6 @@ export default function Invitation({ auth }) {
     } = useForm({
         id: "",
         template: "",
-        datetime: "",
         contact: "",
     });
 
@@ -65,7 +63,7 @@ export default function Invitation({ auth }) {
             preserveScroll: true,
             onSuccess: (page) => {
                 const res = page.props.flash;
-                if(res.token){
+                if (res.token) {
                     window.snap.pay(res.token);
                 }
                 setShowAlert(true);
@@ -83,7 +81,6 @@ export default function Invitation({ auth }) {
         setData({
             id: invitation.id,
             template: invitation.template_id,
-            datetime: invitation.datetime,
             contact: invitation.contact,
         });
         setModalEdit(true);
@@ -196,9 +193,6 @@ export default function Invitation({ auth }) {
                                             Invoice
                                         </th>
                                         <th scope="col" className="px-6 py-4">
-                                            Date
-                                        </th>
-                                        <th scope="col" className="px-6 py-4">
                                             Client
                                         </th>
                                         <th scope="col" className="px-6 py-4">
@@ -231,17 +225,20 @@ export default function Invitation({ auth }) {
                                                         {invitation.checkout}
                                                     </td>
                                                     <td className="px-6 py-4 text-nowrap">
-                                                        {invitation.invoice}
-                                                    </td>
-                                                    <td className="px-6 py-4 text-nowrap">
-                                                        {invitation.datetime}
+                                                        {
+                                                            invitation.is_paid === 'success' ? (
+                                                                <Link href={route('invitation.edit', invitation.invoice)} className="font-medium underline underline-offset-4">{invitation.invoice}</Link>
+                                                            ) : (
+                                                                <span>{invitation.invoice}</span>
+                                                            )
+                                                        }
                                                     </td>
                                                     <td className="px-6 py-4 text-nowrap">
                                                         <span>{invitation.user.name}</span>
                                                         {" "}
                                                         <span>({invitation.contact})</span>
                                                     </td>
-                                                    <td className="px-6 py-4 text-center text-nowrap">
+                                                    <td className="px-6 py-4 text-nowrap">
                                                         {(() => {
                                                             switch (invitation.is_paid) {
                                                                 case 'success':
@@ -313,7 +310,7 @@ export default function Invitation({ auth }) {
                                     ) : (
                                         <tr className="bg-white border-b">
                                             <td
-                                                colSpan="8"
+                                                colSpan="7"
                                                 className="px-6 py-4 text-center"
                                             >
                                                 Data not found.
@@ -428,30 +425,6 @@ export default function Invitation({ auth }) {
                                             )}
                                         </div>
                                     }
-                                    <div className="col-span-2">
-                                        <label
-                                            htmlFor="datetime"
-                                            className="block mb-2 text-sm font-medium text-gray-900"
-                                        >
-                                            Date Time
-                                        </label>
-                                        <input
-                                            type="datetime-local"
-                                            value={data.datetime}
-                                            onChange={(e) =>
-                                                setData("datetime", e.target.value)
-                                            }
-                                            name="datetime"
-                                            id="datetime"
-                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 px-3"
-                                            required={true}
-                                        />
-                                        {errors.datetime && (
-                                            <p className="text-xs text-red-600 mt-2">
-                                                {errors.datetime}
-                                            </p>
-                                        )}
-                                    </div>
                                     <div className="col-span-2">
                                         <label
                                             htmlFor="contact"

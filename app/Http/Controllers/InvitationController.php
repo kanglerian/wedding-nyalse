@@ -40,7 +40,6 @@ class InvitationController extends Controller
     {
         $request->validate([
             'template' => 'required',
-            'datetime' => 'required|date',
             'contact' => 'required|min:13|max:14',
         ]);
 
@@ -49,101 +48,100 @@ class InvitationController extends Controller
         \Midtrans\Config::$isSanitized = true;
         \Midtrans\Config::$is3ds = true;
 
-        // try {
-        $date = date('ymd');
-        $uuid = Str::uuid();
-        $template = Template::find($request->input('template'));
+        try {
+            $date = date('ymd');
+            $uuid = Str::uuid();
+            $template = Template::find($request->input('template'));
 
-        $counter = 1;
-        $invoice = "I" . $date . $template->code . Auth::user()->id . $counter;
-
-        while (Invitation::where('invoice', $invoice)->exists()) {
-            $counter++;
+            $counter = 1;
             $invoice = "I" . $date . $template->code . Auth::user()->id . $counter;
-        }
 
-        $params = array(
-            'transaction_details' => array(
+            while (Invitation::where('invoice', $invoice)->exists()) {
+                $counter++;
+                $invoice = "I" . $date . $template->code . Auth::user()->id . $counter;
+            }
+
+            $params = array(
+                'transaction_details' => array(
+                    'order_id' => $uuid,
+                    'gross_amount' => $template->price,
+                ),
+                'item_details' => [
+                    [
+                        'id' => $template->code,
+                        'price' => $template->price,
+                        'quantity' => 1,
+                        'name' => $template->name
+                    ]
+                ],
+                'customer_details' => array(
+                    'first_name' => Auth::user()->name,
+                    'email' => Auth::user()->email,
+                    'phone' => $request->input('contact'),
+                    'shipping_address' => array(
+                        'first_name' => Auth::user()->name,
+                        'phone' => $request->input('contact'),
+                        'country_code' => 'IDN'
+                    )
+                ),
+            );
+
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+            $data = [
+                'uuid' => $uuid,
+                'user_id' => Auth::user()->id,
+                'invoice' => $invoice,
+                'checkout' => Carbon::now()->setTimezone('Asia/Jakarta'),
+                'template_id' => $request->input('template'),
+                'contact' => $request->input('contact'),
                 'order_id' => $uuid,
                 'gross_amount' => $template->price,
-            ),
-            'item_details' => [
-                [
-                    'id' => $template->code,
-                    'price' => $template->price,
-                    'quantity' => 1,
-                    'name' => $template->name
-                ]
-            ],
-            'customer_details' => array(
-                'first_name' => Auth::user()->name,
-                'email' => Auth::user()->email,
-                'phone' => $request->input('contact'),
-                'shipping_address' => array(
-                    'first_name' => Auth::user()->name,
-                    'phone' => $request->input('contact'),
-                    'country_code' => 'IDN'
-                )
-            ),
-        );
+                'token' => $snapToken
+            ];
 
-        $snapToken = \Midtrans\Snap::getSnapToken($params);
+            Invitation::create($data);
 
-        $data = [
-            'uuid' => $uuid,
-            'user_id' => Auth::user()->id,
-            'invoice' => $invoice,
-            'checkout' => Carbon::now()->setTimezone('Asia/Jakarta'),
-            'template_id' => $request->input('template'),
-            'datetime' => Carbon::now()->setTimezone('Asia/Jakarta'),
-            'contact' => $request->input('contact'),
-            'order_id' => $uuid,
-            'gross_amount' => $template->price,
-            'token' => $snapToken
-        ];
-
-        Invitation::create($data);
-
-        return redirect()->route('invitation.index')->with([
-            'code' => 201,
-            'message' => 'Invitation checkout successfully.',
-            'token' => $snapToken,
-        ], 201);
-
-        // return redirect()->route('invitation.index')->with([
-        //     'code' => 201,
-        //     'message' => 'Invitation checkout successfully.'
-        // ], 201);
-
-        // } catch (\Throwable $th) {
-        //     if ($th->getCode() == 23000) {
-        //         return redirect()->route('invitation.index')->with([
-        //             'code' => 23000,
-        //             'message' => 'Operasi gagal karena adanya keterbatasan pada data terkait.',
-        //         ], 23000);
-        //     } else {
-        //         return redirect()->route('invitation.index')->with([
-        //             'code' => 500,
-        //             'message' => 'Maaf, ada masalah teknis di sisi server.'
-        //         ], 500);
-        //     }
-        // }
+            return redirect()->route('invitation.index')->with([
+                'code' => 201,
+                'message' => 'Invitation checkout successfully.',
+                'token' => $snapToken,
+            ], 201);
+        } catch (\Throwable $th) {
+            if ($th->getCode() == 23000) {
+                return redirect()->route('invitation.index')->with([
+                    'code' => 23000,
+                    'message' => 'Operasi gagal karena adanya keterbatasan pada data terkait.',
+                ], 23000);
+            } else {
+                return redirect()->route('invitation.index')->with([
+                    'code' => 500,
+                    'message' => 'Maaf, ada masalah teknis di sisi server.'
+                ], 500);
+            }
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Invitation $invitation)
+    public function show($invoice)
     {
-        //
+        $invitation = Invitation::with(['template'])->where('invoice', $invoice)->first();
+        return Inertia::render('Invitation/'.$invitation->template->code.'/Invitation', [
+            'invitation' => $invitation,
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Invitation $invitation)
+    public function edit($invoice)
     {
-        //
+        $invitation = Invitation::where('invoice', $invoice)->first();
+        return Inertia::render('Invitation/EditInvitation', [
+            'invitation' => $invitation,
+        ]);
     }
 
     /**
@@ -153,14 +151,12 @@ class InvitationController extends Controller
     {
         $request->validate([
             'template' => 'required',
-            'datetime' => 'required|date',
             'contact' => 'required|min:13|max:14',
         ]);
 
         try {
             $invitation->update([
                 'template_id' => $request->input('template'),
-                'datetime' => $request->input('datetime'),
                 'contact' => $request->input('contact'),
             ]);
 
