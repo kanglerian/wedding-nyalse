@@ -159,7 +159,7 @@ export default function Couple({ invitation, flash }) {
                                                     <p className="text-sm">{couple.privilage}</p>
                                                 </div>
                                             }
-                                            <i className={`absolute right-10 top-1/2 transform -translate-y-1/2 fa-solid fa-3x ${couple.gender ? 'fa-mars text-sky-400' : 'fa-venus text-pink-400'}`}></i>
+                                            <i className={`absolute right-10 top-1/2 transform -translate-y-1/2 fa-solid fa-3x ${couple.gender == '1' ? 'fa-mars text-sky-400' : 'fa-venus text-pink-400'}`}></i>
                                         </div>
                                         <button disabled={processing}
                                             onClick={() => handleDeleteClick(couple)}
