@@ -144,8 +144,8 @@ export default function Couple({ invitation, flash }) {
                             {
                                 invitation.couple.map((couple) =>
                                     <div key={couple.id} className="relative">
-                                        <div onClick={() => handleEditClick(couple)} className={`cursor-pointer relative transition-all ease-in-out px-5 py-4 rounded-2xl text-white ${couple.gender ? 'bg-sky-500 hover:bg-sky-600' : 'bg-pink-500 hover:bg-pink-600'}`}>
-                                            <h5 className="italic text-sm">Mempelai {couple.gender ? 'laki-laki' : 'perempuan'}</h5>
+                                        <div onClick={() => handleEditClick(couple)} className={`cursor-pointer relative transition-all ease-in-out px-5 py-4 rounded-2xl text-white ${couple.gender == '1' ? 'bg-sky-500 hover:bg-sky-600' : 'bg-pink-500 hover:bg-pink-600'}`}>
+                                            <h5 className="italic text-sm">Mempelai {couple.gender == '1' ? 'laki-laki' : 'perempuan'}</h5>
                                             <h2 className="font-bold">{couple.fullname} ({couple.nickname})</h2>
                                             <ul className="text-sm list-disc ml-5">
                                                 <li>Nama Ayah: {couple.father_name}</li>
