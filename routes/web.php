@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CoupleController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
@@ -45,6 +46,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('invitation', InvitationController::class);
     Route::patch('/invitation/status/{invitation}', [InvitationController::class, 'status'])->name('invitation.status');
+
+    Route::resource('couple', CoupleController::class);
+    Route::patch('/couple/status/{couple}', [CoupleController::class, 'status'])->name('couple.status');
 });
 
 require __DIR__.'/auth.php';

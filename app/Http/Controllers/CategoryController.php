@@ -113,7 +113,6 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-
         try {
             $category->delete();
             return redirect()->route('category.index')->with([

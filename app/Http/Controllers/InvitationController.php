@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Couple;
 use App\Models\Invitation;
 use App\Models\Template;
 use Carbon\Carbon;
@@ -17,7 +18,7 @@ class InvitationController extends Controller
      */
     public function index()
     {
-        $templates = Template::all();
+        $templates = Template::where('status', true)->get();
         $invitations = Invitation::with(['template', 'user'])->paginate(5);
         return Inertia::render('Invitation/Invitation', [
             'templates' => $templates,
@@ -127,9 +128,14 @@ class InvitationController extends Controller
      */
     public function show($invoice)
     {
-        $invitation = Invitation::with(['template'])->where('invoice', $invoice)->first();
-        return Inertia::render('Invitation/'.$invitation->template->code.'/Invitation', [
+        $invitation = Invitation::with(['template'])->where('invoice', $invoice)->firstOrFail();
+        $couple = Couple::where('invitation_id', $invitation->id)->get();
+        $data = [
             'invitation' => $invitation,
+            'couple' => $couple,
+        ];
+        return Inertia::render('Invitation/'.$invitation->template->code.'/Invitation', [
+            'invitation' => $data,
         ]);
     }
 
@@ -138,9 +144,14 @@ class InvitationController extends Controller
      */
     public function edit($invoice)
     {
-        $invitation = Invitation::where('invoice', $invoice)->first();
-        return Inertia::render('Invitation/EditInvitation', [
+        $invitation = Invitation::where('invoice', $invoice)->firstOrFail();
+        $couple = Couple::where('invitation_id', $invitation->id)->get();
+        $data = [
             'invitation' => $invitation,
+            'couple' => $couple,
+        ];
+        return Inertia::render('Invitation/EditInvitation', [
+            'invitation' => $data,
         ]);
     }
 
