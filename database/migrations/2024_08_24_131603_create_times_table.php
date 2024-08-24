@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('times', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('invitation_id');
-            $table->datetime('time_akad');
-            $table->datetime('time_resepsi');
+            $table->datetime('marriage');
+            $table->datetime('reception');
+            $table->string('location_marriage');
+            $table->string('location_reception');
+            $table->text('gmaps')->nullable();
             $table->timestamps();
 
             $table->foreign('invitation_id')->references('id')->on('invitations')->onDelete('restrict');
