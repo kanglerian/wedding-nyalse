@@ -4,6 +4,7 @@ import Couple from "./Features/Couple";
 import { useState } from "react";
 import Time from "./Features/Time";
 import Gift from "./Features/GIft";
+import Story from "./Features/Story";
 
 export default function EditInvitation({ auth }) {
     const { invitation, flash } = usePage().props;
@@ -52,7 +53,7 @@ export default function EditInvitation({ auth }) {
                                     </button>
                                 </li>
                                 <li>
-                                    <button type="button" className="inline-flex items-center px-4 py-3 rounded-xl text-nowrap shadow-sm hover:text-gray-900 bg-gray-50 hover:bg-gray-200 transition-all ease-in-out space-x-2 w-full">
+                                    <button type="button" onClick={() => setActive('story')} className="inline-flex items-center px-4 py-3 rounded-xl text-nowrap shadow-sm hover:text-gray-900 bg-gray-50 hover:bg-gray-200 transition-all ease-in-out space-x-2 w-full">
                                         <i className="fa-solid fa-book"></i>
                                         <span>Story</span>
                                     </button>
@@ -71,6 +72,8 @@ export default function EditInvitation({ auth }) {
                                             return <Couple invitation={invitation} flash={flash} />;
                                         case 'time':
                                             return <Time invitation={invitation} flash={flash} />;
+                                        case 'story':
+                                            return <Story invitation={invitation} flash={flash} />;
                                         case 'gift':
                                             return <Gift invitation={invitation} flash={flash} />;
                                         default:

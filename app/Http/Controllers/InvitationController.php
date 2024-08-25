@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Couple;
 use App\Models\Gift;
 use App\Models\Invitation;
+use App\Models\Story;
 use App\Models\Template;
 use App\Models\Time;
 use Carbon\Carbon;
@@ -132,13 +133,15 @@ class InvitationController extends Controller
     {
         $invitation = Invitation::with(['template'])->where('invoice', $invoice)->firstOrFail();
         $couple = Couple::where('invitation_id', $invitation->id)->get();
+        $stories = Story::where('invitation_id', $invitation->id)->get();
         $time = Time::where('invitation_id', $invitation->id)->first();
         $gift = Gift::where('invitation_id', $invitation->id)->first();
         $data = [
             'invitation' => $invitation,
             'couple' => $couple,
+            'stories' => $stories,
             'time' => $time,
-            'gift' => $gift
+            'gift' => $gift,
         ];
         return Inertia::render('Invitation/'.$invitation->template->code.'/Invitation', [
             'invitation' => $data,
@@ -152,11 +155,13 @@ class InvitationController extends Controller
     {
         $invitation = Invitation::where('invoice', $invoice)->firstOrFail();
         $couple = Couple::where('invitation_id', $invitation->id)->get();
+        $stories = Story::where('invitation_id', $invitation->id)->get();
         $time = Time::where('invitation_id', $invitation->id)->first();
         $gift = Gift::where('invitation_id', $invitation->id)->first();
         $data = [
             'invitation' => $invitation,
             'couple' => $couple,
+            'stories' => $stories,
             'time' => $time,
             'gift' => $gift
         ];

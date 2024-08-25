@@ -7,6 +7,7 @@ use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\StoryController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TimeController;
 use App\Http\Controllers\UserController;
@@ -52,6 +53,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('couple', CoupleController::class);
     Route::resource('time', TimeController::class);
     Route::resource('gift', GiftController::class);
+    Route::resource('story', StoryController::class);
 });
 
 require __DIR__.'/auth.php';
