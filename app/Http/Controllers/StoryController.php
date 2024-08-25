@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Story;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StoryController extends Controller
 {
@@ -42,14 +43,15 @@ class StoryController extends Controller
         if ($request->hasFile('cover')) {
             $file = $request->file('cover');
             $extension = $file->getClientOriginalExtension();
-            $filePath = $file->storeAs('covers', Carbon::now() . '.' . $extension, 'public');
+            $filename =  Carbon::now()->format('Ymd_His') . $request->input('invitation_id') . Auth::user()->id . '.' . $extension;
+            $filePath = $file->storeAs('covers', $filename, 'public');
         }
 
         try {
             Story::create([
                 'invitation_id' => $request->input('invitation_id'),
                 'meet' => $request->input('meet'),
-                'cover' => Carbon::now() . '.' . $extension,
+                'cover' => $filename,
                 'title' => $request->input('title'),
                 'description' => $request->input('description'),
             ]);
