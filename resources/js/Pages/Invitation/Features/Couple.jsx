@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
-import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import { useRef } from "react";
+import { useState } from "react";
+import { useForm } from "@inertiajs/react";
 
 export default function Couple({ invitation, flash }) {
     const [modalCreate, setModalCreate] = useState(false);
@@ -95,8 +94,6 @@ export default function Couple({ invitation, flash }) {
     };
 
     const handleDelete = (id) => {
-        console.log(id);
-
         destroy(route("couple.destroy", id), {
             onSuccess: () => {
                 setShowAlert(true);
@@ -171,16 +168,6 @@ export default function Couple({ invitation, flash }) {
                                     </div>
                                 )
                             }
-                            {/* <div className="cursor-pointer relative bg-pink-500 hover:bg-pink-600 transition-all ease-in-out px-5 py-4 rounded-2xl text-white">
-                                <h5 className="italic text-sm">Mempelai Perempuan</h5>
-                                <h2 className="font-bold">Naimatus Sya'diah, A.Md.Pjk (Diah)</h2>
-                                <ul className="text-sm list-disc ml-5">
-                                    <li>Nama Ayah: Sudarsono</li>
-                                    <li>Nama Ibu: Daryati</li>
-                                    <li>Anak ke-: 5</li>
-                                </ul>
-                                <i className="absolute right-10 top-1/2 transform -translate-y-1/2 fa-solid fa-venus fa-3x text-pink-400"></i>
-                            </div> */}
                         </section>
                     ) : (
                         <p className="text-center text-sm">Belum ada data mempelai.</p>

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Couple;
+use App\Models\Gift;
 use App\Models\Invitation;
 use App\Models\Template;
+use App\Models\Time;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -130,9 +132,13 @@ class InvitationController extends Controller
     {
         $invitation = Invitation::with(['template'])->where('invoice', $invoice)->firstOrFail();
         $couple = Couple::where('invitation_id', $invitation->id)->get();
+        $time = Time::where('invitation_id', $invitation->id)->first();
+        $gift = Gift::where('invitation_id', $invitation->id)->first();
         $data = [
             'invitation' => $invitation,
             'couple' => $couple,
+            'time' => $time,
+            'gift' => $gift
         ];
         return Inertia::render('Invitation/'.$invitation->template->code.'/Invitation', [
             'invitation' => $data,
@@ -146,9 +152,13 @@ class InvitationController extends Controller
     {
         $invitation = Invitation::where('invoice', $invoice)->firstOrFail();
         $couple = Couple::where('invitation_id', $invitation->id)->get();
+        $time = Time::where('invitation_id', $invitation->id)->first();
+        $gift = Gift::where('invitation_id', $invitation->id)->first();
         $data = [
             'invitation' => $invitation,
             'couple' => $couple,
+            'time' => $time,
+            'gift' => $gift
         ];
         return Inertia::render('Invitation/EditInvitation', [
             'invitation' => $data,

@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CoupleController;
+use App\Http\Controllers\GiftController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TemplateController;
+use App\Http\Controllers\TimeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -48,7 +50,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/invitation/status/{invitation}', [InvitationController::class, 'status'])->name('invitation.status');
 
     Route::resource('couple', CoupleController::class);
-    Route::patch('/couple/status/{couple}', [CoupleController::class, 'status'])->name('couple.status');
+    Route::resource('time', TimeController::class);
+    Route::resource('gift', GiftController::class);
 });
 
 require __DIR__.'/auth.php';

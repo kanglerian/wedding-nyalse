@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Time;
+use App\Models\Gift;
 use Illuminate\Http\Request;
 
-class TimeController extends Controller
+class GiftController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -30,26 +30,22 @@ class TimeController extends Controller
     {
         $request->validate([
             'invitation_id' => 'required',
-            'marriage' => 'required|date',
-            'reception' => 'required|date',
-            'location_marriage' => 'required|string',
-            'location_reception' => 'required|string',
-            'gmaps' => 'required|string',
+            'payment' => 'required|string',
+            'code' => 'required|string',
+            'address' => 'string',
         ]);
 
         try {
-            Time::create([
+            Gift::create([
                 'invitation_id' => $request->input('invitation_id'),
-                'marriage' => $request->input('marriage'),
-                'reception' => $request->input('reception'),
-                'location_marriage' => $request->input('location_marriage'),
-                'location_reception' => $request->input('location_reception'),
-                'gmaps' => $request->input('gmaps'),
+                'payment' => $request->input('payment'),
+                'code' => $request->input('code'),
+                'address' => $request->input('address'),
             ]);
 
             return back()->with([
                 'code' => 201,
-                'message' => 'Time created successfully.'
+                'message' => 'Gift created successfully.'
             ], 201);
         } catch (\Throwable $th) {
             if ($th->getCode() == 23000) {
@@ -69,7 +65,7 @@ class TimeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Time $time)
+    public function show(Gift $gift)
     {
         //
     }
@@ -77,7 +73,7 @@ class TimeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Time $time)
+    public function edit(Gift $gift)
     {
         //
     }
@@ -85,27 +81,24 @@ class TimeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Time $time)
+    public function update(Request $request, Gift $gift)
     {
         $request->validate([
-            'marriage' => 'required|date',
-            'reception' => 'required|date',
-            'location_marriage' => 'required|string',
-            'location_reception' => 'required|string',
-            'gmaps' => 'required|string',
+            'payment' => 'required|string',
+            'code' => 'required|string',
+            'address' => 'string',
         ]);
 
         try {
-            $time->update([
-                'marriage' => $request->input('marriage'),
-                'reception' => $request->input('reception'),
-                'location_marriage' => $request->input('location_marriage'),
-                'location_reception' => $request->input('location_reception'),
-                'gmaps' => $request->input('gmaps'),
+            $gift->update([
+                'invitation_id' => $request->input('invitation_id'),
+                'payment' => $request->input('payment'),
+                'code' => $request->input('code'),
+                'address' => $request->input('address'),
             ]);
             return back()->with([
                 'code' => 204,
-                'message' => 'Time updated successfully.'
+                'message' => 'Gift updated successfully.'
             ], 204);
         } catch (\Throwable $th) {
             if ($th->getCode() == 23000) {
@@ -125,13 +118,13 @@ class TimeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Time $time)
+    public function destroy(Gift $gift)
     {
         try {
-            $time->delete();
+            $gift->delete();
             return back()->with([
                 'code' => 200,
-                'message' => 'Time deleted successfully.'
+                'message' => 'Gift deleted successfully.'
             ], 200);
         } catch (\Throwable $th) {
             if ($th->getCode() == 23000) {
