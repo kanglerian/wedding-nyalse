@@ -24,7 +24,11 @@ class InvitationController extends Controller
     public function index()
     {
         $templates = Template::where('status', true)->get();
-        $invitations = Invitation::with(['template', 'user'])->paginate(5);
+        if(Auth::user()->role !== 'A'){
+            $invitations = Invitation::with(['template', 'user'])->where(['user_id' => Auth::user()->id])->paginate(5);
+        } elseif (Auth::user()->role === 'A') {
+            $invitations = Invitation::with(['template', 'user'])->paginate(5);
+        }
         return Inertia::render('Invitation/Invitation', [
             'templates' => $templates,
             'invitations' => $invitations,

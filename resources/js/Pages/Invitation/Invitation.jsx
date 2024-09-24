@@ -260,23 +260,26 @@ export default function Invitation({ auth }) {
                                                                 <i className="fa-solid fa-file-invoice"></i>
                                                             </button>
                                                         }
-                                                        <button
-                                                            onClick={() =>
-                                                                handleStatus(
-                                                                    invitation.id
-                                                                )
-                                                            }
-                                                            type="button"
-                                                            className={`text-white bg-${invitation.status ? 'emerald' : 'red'}-500 hover:bg-${invitation.status ? 'emerald' : 'red'}-600 transition-all ease-in-out font-medium rounded-xl text-sm px-3 py-1.5 text-center`}
-                                                        >
-                                                            {
-                                                                invitation.status ? (
-                                                                    <i className="fa-solid fa-toggle-on"></i>
-                                                                ) : (
-                                                                    <i className="fa-solid fa-toggle-off"></i>
-                                                                )
-                                                            }
-                                                        </button>
+                                                        {
+                                                            invitation.is_paid === 'success' &&
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleStatus(
+                                                                        invitation.id
+                                                                    )
+                                                                }
+                                                                type="button"
+                                                                className={`text-white bg-${invitation.status ? 'emerald' : 'red'}-500 hover:bg-${invitation.status ? 'emerald' : 'red'}-600 transition-all ease-in-out font-medium rounded-xl text-sm px-3 py-1.5 text-center`}
+                                                            >
+                                                                {
+                                                                    invitation.status ? (
+                                                                        <i className="fa-solid fa-toggle-on"></i>
+                                                                    ) : (
+                                                                        <i className="fa-solid fa-toggle-off"></i>
+                                                                    )
+                                                                }
+                                                            </button>
+                                                        }
                                                         {/* <span className="bg-emerald-500 hover:bg-emerald-600"></span> */}
                                                         <button
                                                             onClick={() =>
