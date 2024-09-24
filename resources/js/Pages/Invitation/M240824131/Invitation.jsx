@@ -24,7 +24,7 @@ export default function Invitation({ auth }) {
                             )
                         }
                     </ul>
-                    <p className="text-white">26 Desember 2019</p>
+                    <p className="text-white">{invitation.time.marriage}</p>
                 </div>
                 <button type="button" onClick={() => document.getElementById('content').scrollIntoView({ behavior: 'smooth' })} className="text-white border border-white hover:bg-white hover:text-gray-900 transition-all ease-in-out px-4 py-2.5">Buka Undangan</button>
             </header>

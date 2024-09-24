@@ -136,8 +136,8 @@ export default function Story({ invitation, flash }) {
                             {
                                 invitation.stories.map((story) =>
                                     <div key={story.id} className="relative">
-                                        <div onClick={() => handleEditClick(story)} className="cursor-pointer relative transition-all ease-in-out p-5 rounded-2xl text-white bg-gray-300 hover:bg-gray-400 space-y-2">
-                                            <div className="bg-white h-36 rounded-2xl"></div>
+                                        <div onClick={() => handleEditClick(story)} className="cursor-pointer relative transition-all ease-in-out p-5 rounded-2xl text-white bg-gray-100 hover:bg-gray-200 border border-gray-200 space-y-2">
+                                            <img src={`/storage/covers/${story.cover}`} alt={story.title} className="rounded-2xl" />
                                             <div>
                                                 <h4 className="font-bold text-sm text-gray-700">{story.meet}</h4>
                                                 <h3 className="font-bold text-lg text-gray-800">{story.title}</h3>
@@ -169,8 +169,8 @@ export default function Story({ invitation, flash }) {
                             <div className="flex items-center justify-between px-6 py-4 md:p-5 border-b rounded-t">
                                 <h3 className="text-lg font-semibold text-gray-900">
                                     {modalCreate
-                                        ? "Tambah Data Mempelai"
-                                        : "Ubah Data Mempelai"}
+                                        ? "Tambah Kisah Mempelai"
+                                        : "Ubah Kisah Mempelai"}
                                 </h3>
                                 <button
                                     type="button"

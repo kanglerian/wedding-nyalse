@@ -8,9 +8,11 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StoryController;
+use App\Http\Controllers\GaleryController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TimeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VideoController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -54,6 +56,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('time', TimeController::class);
     Route::resource('gift', GiftController::class);
     Route::resource('story', StoryController::class);
+    Route::resource('galery', GaleryController::class);
+    Route::resource('video', VideoController::class);
 });
 
 require __DIR__.'/auth.php';

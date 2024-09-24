@@ -5,6 +5,8 @@ import { useState } from "react";
 import Time from "./Features/Time";
 import Gift from "./Features/GIft";
 import Story from "./Features/Story";
+import Galery from "./Features/Galery";
+import Video from "./Features/Video";
 
 export default function EditInvitation({ auth }) {
     const { invitation, flash } = usePage().props;
@@ -41,13 +43,13 @@ export default function EditInvitation({ auth }) {
                                     </button>
                                 </li>
                                 <li>
-                                    <button type="button" className="inline-flex items-center px-4 py-3 rounded-xl text-nowrap shadow-sm hover:text-gray-900 bg-gray-50 hover:bg-gray-200 transition-all ease-in-out space-x-2 w-full">
+                                    <button type="button" onClick={() => setActive('galery')} className="inline-flex items-center px-4 py-3 rounded-xl text-nowrap shadow-sm hover:text-gray-900 bg-gray-50 hover:bg-gray-200 transition-all ease-in-out space-x-2 w-full">
                                         <i className="fa-solid fa-images"></i>
                                         <span>Galeri</span>
                                     </button>
                                 </li>
                                 <li>
-                                    <button type="button" className="inline-flex items-center px-4 py-3 rounded-xl text-nowrap shadow-sm hover:text-gray-900 bg-gray-50 hover:bg-gray-200 transition-all ease-in-out space-x-2 w-full">
+                                    <button type="button" onClick={() => setActive('video')} className="inline-flex items-center px-4 py-3 rounded-xl text-nowrap shadow-sm hover:text-gray-900 bg-gray-50 hover:bg-gray-200 transition-all ease-in-out space-x-2 w-full">
                                         <i className="fa-solid fa-video"></i>
                                         <span>Video</span>
                                     </button>
@@ -72,21 +74,24 @@ export default function EditInvitation({ auth }) {
                                             return <Couple invitation={invitation} flash={flash} />;
                                         case 'time':
                                             return <Time invitation={invitation} flash={flash} />;
+                                        case 'galery':
+                                            return <Galery invitation={invitation} flash={flash} />;
                                         case 'story':
                                             return <Story invitation={invitation} flash={flash} />;
                                         case 'gift':
                                             return <Gift invitation={invitation} flash={flash} />;
+                                        case 'video':
+                                            return <Video invitation={invitation} flash={flash} />;
                                         default:
                                             return <Couple invitation={invitation} flash={flash} />;
                                     }
                                 })()
                             }
                         </div>
-
                     </div>
                     <div>
-                        <button type="button" onClick={refreshInvitation} className="bg-sky-500 hover:bg-sky-600 text-amber-100 shadow-sm transition-all ease-in-out px-5 py-2.5 rounded-xl text-sm mb-2"><i className="fa-solid fa-arrows-rotate"></i></button>
-                        <iframe src={iframeSrc} className="w-full h-screen md:rounded-3xl shadow-lg border-4 border-gray-400" frameBorder="0" allowFullScreen></iframe>
+                        <button type="button" onClick={refreshInvitation} className="bg-sky-500 hover:bg-sky-600 text-amber-100 shadow-sm transition-all ease-in-out px-5 mx-3 mb-2 py-2.5 rounded-xl text-sm"><i className="fa-solid fa-arrows-rotate"></i></button>
+                        <iframe src={iframeSrc} className="w-full h-screen md:rounded-3xl shadow-lg" frameBorder="0" allowFullScreen></iframe>
                     </div>
                 </section>
             </div>

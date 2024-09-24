@@ -6,6 +6,8 @@ use App\Models\Story;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
 
 class StoryController extends Controller
 {
@@ -44,7 +46,7 @@ class StoryController extends Controller
             $file = $request->file('cover');
             $extension = $file->getClientOriginalExtension();
             $filename =  Carbon::now()->format('Ymd_His') . $request->input('invitation_id') . Auth::user()->id . '.' . $extension;
-            $filePath = $file->storeAs('covers', $filename, 'public');
+            $file->storeAs('covers', $filename, 'public');
         }
 
         try {
@@ -134,6 +136,12 @@ class StoryController extends Controller
     public function destroy(Story $story)
     {
         try {
+            if ($story->cover) {
+                $coverPath = "covers/{$story->cover}";
+                if (Storage::disk('public')->exists($coverPath)) {
+                    Storage::disk('public')->delete($coverPath);
+                }
+            }
             $story->delete();
             return back()->with([
                 'code' => 200,
